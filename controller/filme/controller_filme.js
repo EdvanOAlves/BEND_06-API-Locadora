@@ -1,7 +1,7 @@
 /**************************************************************************************************
- * Objetivo: Validação e entrega de dados entre o model e app
+ * Objetivo: Arquivo responsável pela manipulação de dados entre o APP e a Model
  * Autor: Edvan Alves
- * Data: 01/10/2025
+ * Data: 07/10/2025
  * Versão: 1.0.10.25
  **************************************************************************************************/
  
