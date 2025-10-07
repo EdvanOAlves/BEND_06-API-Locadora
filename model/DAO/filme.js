@@ -1,0 +1,95 @@
+/**************************************************************************************************
+ * Objetivo: Arquivo responsável pelo CRUD de dados no MYSQL referente ao filme
+ * Autor: Edvan Alves
+ * Data: 01/10/2025
+ * Versão: 1.0.10.25
+**************************************************************************************************/
+
+ /*************************************************************************************************/
+ //COMANDOS UTILIZADOS
+
+    //$queryRawUnsafe -> permite executar um script SQL de uma variável 
+        // E que retorna valores do banco (SELECT)
+    //$executeRawUnsafe -> permite executar um script SQL de uma variável
+        //E NÃO retorna dados do banco (INSERT, UPDATE, DELETE)
+
+    //$queryRaw -> permite executar um script SQL
+        //SEM estar em uma variável e que retorna valores do banco (SELECT)
+        //Faz tratamentos de segurança contra SQL Injection
+    //$executeRaw -> Permite executar um script SQL
+        //SEM estar em uma variável
+        //E NÃO retorna dados do banco
+        //faz tratamentos de segurança contra SQL Injection
+
+ /**************************************************************************************************/
+
+ /*************************************************************************************************/
+ //BIBLIOTECAS UTILIZADAS
+
+ /*************************************************************************************************/
+/*
+    Exemplos de dependências para conexões com o BD
+        Para Banco de Dados Relacionais
+        Sequelize   -> muito utilizado em projetos desde o inicio do node
+        Prisma      -> dependência mais atual que trabalha com BD (MYSQL, PostgreSQL, SQL Server) (SQL ou ORM)
+            npm install prisma --save          ->Instalar o prisma(conexão com o Database)
+            npm install @prisma/client --save  ->Instalar o cliente do Prisma(Executar scripts SQL no DB)    
+        //Comandos do prisma
+            npx prisma init                     -> Prompt de comando para inicializar o prisma no projeto
+        Knex        -> dependência atual que trabalha com MYSQL
+
+        Para Banco de Dados não Relacionais
+        Mongoose    -> dependência para o MongoDB (Não relacional)
+*/
+
+
+
+
+// import da dependencia do prisma, para execução de script SQL no BD
+const { PrismaClient } = require('@prisma/client');
+
+//Cria um novo objeto baseado na classe do PrismaClient
+const prisma = new PrismaClient;
+
+
+// Retorna todos os filmes do banco de dados
+const getSelectAllMovies = async function () {
+    try {
+        //script SQL
+        let sql = `SELECT * FROM tbl_filme ORDER BY id DESC`
+    
+        //Encaminha o script SQL para o BD
+        let result = await prisma.$queryRawUnsafe(sql)
+        // let result = await prisma.$queryRawUnsafe `SELECT * FROM tbl_filme ORDER BY id DESC`
+    
+        if (result.length > 0)
+            return result;
+        else
+            return false;
+        
+    } catch (error) {
+        // console.log(error);
+        return false;
+    }
+
+}
+
+// Retorna o filme do Banco de dados, filtrando por id
+const getSelectByIdMovies = async function (id) { }
+
+// Insere um filme novo no banco de dados
+const setInsertMovies = async function () { }
+
+// Altera um filme no banco de dados
+const setUpdateMovies = async function (id) { }
+
+// Exclui um filme pelo id no banco de dados
+const setDeleteMovies = async function (id) { }
+
+module.exports = {
+    getSelectAllMovies,
+    getSelectByIdMovies,
+    setInsertMovies,
+    setUpdateMovies,
+    setDeleteMovies
+}
