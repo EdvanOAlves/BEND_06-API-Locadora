@@ -15,7 +15,7 @@ const MESSAGE_HEADER = {
     api_description: 'API para manipulação de dados de filmes',
     status: Boolean,
     status_code: Number,
-    request_date: today.getDate(),
+    request_date: today,
     items: {}
 }
 
