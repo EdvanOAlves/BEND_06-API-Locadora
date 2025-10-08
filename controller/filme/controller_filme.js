@@ -27,16 +27,19 @@ const listarFilmes = async function () {
         // Chama a função do DAO para retornar a lista de Filmes
         let resultFilmes = await filmeDAO.getSelectAllMovies();
 
-        if (resultFilmes) {
-            if (resultFilmes.length > 0) {
-                MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
-                MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
-                MESSAGES.DEFAULT_HEADER.items.filmes = resultFilmes;
-                return MESSAGES.DEFAULT_HEADER;                 //200
-            } else
-                return MESSAGES.ERROR_NOT_FOUND;                //404
-        } else
+        if (!resultFilmes) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;        //500
+        }
+        if (resultFilmes.length < 0) {
+            return MESSAGES.ERROR_NOT_FOUND;                //404
+        }
+        MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
+        MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
+        MESSAGES.DEFAULT_HEADER.items.filmes = resultFilmes;
+        return MESSAGES.DEFAULT_HEADER;                 //200
+
+
+
 
     } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;       //500
@@ -54,10 +57,9 @@ const buscarFilmeId = async function (id) {
         }
 
 
-
         //Executando busca por id
         let resultFilmes = await filmeDAO.getSelectByIdMovies(Number(id));
-        
+
         //--------------VERIFICAÇÕES-----------//
         //Caso houve um erro na execução do model
         if (!resultFilmes) {
