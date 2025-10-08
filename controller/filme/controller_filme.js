@@ -17,21 +17,25 @@
 const filmeDAO = require('../../model/DAO/filme.js');
 
 //Import do arquivo de mensagens
-const MESSAGES = require('../modulo/config_messages.js');
+const DEFAULT_MESSAGES = require('../modulo/config_messages.js');
 
 // Retorna uma lista com todos os filmes
 const listarFilmes = async function () {
-    let resultFilmes = await filmeDAO.getSelectAllMovies();
+    //Criando um novo objeto para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
 
+    // Chama a função do DAO para retornar a lista de Filmes
+    let resultFilmes = await filmeDAO.getSelectAllMovies();
+    
     if (resultFilmes){
         if (resultFilmes.length > 0){
-            MESSAGES.MESSAGE_HEADER.status = MESSAGES.MESSAGE_REQUEST_SUCCESS.status; //Isso aqui é genial
-            MESSAGES.MESSAGE_HEADER.status_code = MESSAGES.MESSAGE_REQUEST_SUCCESS.status_code;
-            MESSAGES.MESSAGE_HEADER.items.filmes = resultFilmes;
-            return MESSAGES.MESSAGE_HEADER;
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
+            MESSAGES.DEFAULT_HEADER.items.filmes = resultFilmes;
+            return MESSAGES.DEFAULT_HEADER;
         }
     }
-
+    
 }
 
 // Retorna um filme correspondente ao id inserido

@@ -7,21 +7,21 @@
  **************************************************************************************************/
 
 //Armazenando a data da execução
-const today = Date.now();
+const today = new Date();
 
 /*************************************** MENSAGENS PADRONIZADAS ***********************************/
-const MESSAGE_HEADER = {
+const DEFAULT_HEADER = {
     development: 'Edvan Alves',
     api_description: 'API para manipulação de dados de filmes',
     status: Boolean,
     status_code: Number,
-    request_date: today,
+    request_date: today.toLocaleString(),
     items: {}
 }
 
 
 /*************************************** MENSAGENS DE SUCESSO *************************************/
-const MESSAGE_REQUEST_SUCCESS = {
+const SUCCESS_REQUEST = {
     status: true,
     status_code: 200,
     message: 'Requisição bem sucedida!'
@@ -30,7 +30,11 @@ const MESSAGE_REQUEST_SUCCESS = {
 
 /*************************************** MENSAGENS DE ERRO ****************************************/
 
+
+
+
+
 module.exports = {
-    MESSAGE_HEADER,
-    MESSAGE_REQUEST_SUCCESS
+    DEFAULT_HEADER,
+    SUCCESS_REQUEST
 }
