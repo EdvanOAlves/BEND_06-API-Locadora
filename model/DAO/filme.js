@@ -47,9 +47,6 @@
         Mongoose    -> dependência para o MongoDB (Não relacional)
 */
 
-
-
-
 // import da dependencia do prisma, para execução de script SQL no BD
 const { PrismaClient } = require('../../generated/prisma');
 
@@ -67,7 +64,7 @@ const getSelectAllMovies = async function () {
         let result = await prisma.$queryRawUnsafe(sql)
         // let result = await prisma.$queryRawUnsafe `SELECT * FROM tbl_filme ORDER BY id DESC`
     
-        if (result.length > 0)
+        if (Array.isArray(result))
             return result;
         else
             return false;
