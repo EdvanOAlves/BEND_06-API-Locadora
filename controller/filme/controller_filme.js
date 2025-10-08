@@ -21,10 +21,9 @@ const DEFAULT_MESSAGES = require('../modulo/config_messages.js');
 
 // Retorna uma lista com todos os filmes
 const listarFilmes = async function () {
+    //Criando um novo objeto para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        //Criando um novo objeto para as mensagens
-        let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
-
         // Chama a função do DAO para retornar a lista de Filmes
         let resultFilmes = await filmeDAO.getSelectAllMovies();
 
@@ -36,18 +35,56 @@ const listarFilmes = async function () {
                 return MESSAGES.DEFAULT_HEADER;                 //200
             } else
                 return MESSAGES.ERROR_NOT_FOUND;                //404
-        }else
+        } else
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;        //500
 
-    } catch (error) {  
+    } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;       //500
     }
-
-
 }
 
 // Retorna um filme correspondente ao id inserido
 const buscarFilmeId = async function (id) {
+    //Criando um novo objeto para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
+    try {
+        //Válidação de chegada do ID, barra NaNs
+        if (isNaN(id)) {
+            return MESSAGES.ERROR_REQUIRED_FIELDS //400   
+        }
+
+
+
+        //Executando busca por id
+        let resultFilmes = await filmeDAO.getSelectByIdMovies(Number(id));
+        
+        //--------------VERIFICAÇÕES-----------//
+        //Caso houve um erro na execução do model
+        if (!resultFilmes) {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL     //500
+        }
+
+        //Caso não exista um item com id correspondente ao inserido
+        if (resultFilmes <= 0) {
+            return MESSAGES.ERROR_NOT_FOUND;                //404
+        }
+
+        //------------------------------------//
+
+
+        //Montagem do Message
+        MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
+        MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
+        MESSAGES.DEFAULT_HEADER.items.filme = resultFilmes;
+
+        return MESSAGES.DEFAULT_HEADER                      //200
+
+
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;   //500
+
+    }
 
 }
 
@@ -67,5 +104,6 @@ const excluirFilme = async function (id) {
 }
 
 module.exports = {
-    listarFilmes
+    listarFilmes,
+    buscarFilmeId
 }

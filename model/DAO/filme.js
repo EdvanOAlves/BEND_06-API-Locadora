@@ -62,7 +62,6 @@ const getSelectAllMovies = async function () {
     
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
-        // let result = await prisma.$queryRawUnsafe `SELECT * FROM tbl_filme ORDER BY id DESC`
     
         if (Array.isArray(result))
             return result;
@@ -77,7 +76,25 @@ const getSelectAllMovies = async function () {
 }
 
 // Retorna o filme do Banco de dados, filtrando por id
-const getSelectByIdMovies = async function (id) { }
+const getSelectByIdMovies = async function (id) {
+    try {
+        //script SQL
+        let sql = `SELECT * FROM tbl_filme  where id =${id}`
+    
+        //Encaminha o script SQL para o BD
+        let result = await prisma.$queryRawUnsafe(sql)
+    
+        if (Array.isArray(result))
+            return result;
+        else
+            return false;
+        
+    } catch (error) {
+        // console.log(error);
+        return false;
+    }
+
+ }
 
 // Insere um filme novo no banco de dados
 const setInsertMovies = async function () { }
