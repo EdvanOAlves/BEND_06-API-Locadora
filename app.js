@@ -34,6 +34,9 @@ const express = require('express');        // Responsável pela API
 const cors = require('cors');              // Responsável pelas permissões da API (APP)
 const bodyParser = require('body-parser');  // Responsável por gerenciar a chegada dos dados da API com o front
 
+//Criando objeto especialista no formato JSON para recebimento de dados via POST e PUT
+const bodyParserJSON = bodyParser.json();
+
 //Import do arquivo de Funções
 const dados = require('./controller/filme/controller_filme.js');
 
@@ -83,6 +86,20 @@ app.get('/v1/locadora/filme/:id', cors(), async function (request, response){
    response.json(filme);
 })
 //Boa prática: Quando passamos primary Key é interessante colocar essa PK como parâmetro, itens de filtro são parâmetros de rota mesmo
+
+app.post('/v1/locadora/filme/', cors(), bodyParserJSON, async function(request, response){
+   //Recebeb os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML ou...)
+   let contentType = request.headers['content-type']
+
+   //Chama a função da controller para inserir o novo filme, encaminhando os dados e tipo de conteúdo
+   let filme = await controllerFilme.inserirFilme(dadosBody , contentType);
+   response.status(filme.status_code);
+   response.json(filme);
+
+})
 
 app.listen(PORT, function(){
    console.log('Hello world! \n API está operante, escutante e funcionante!')

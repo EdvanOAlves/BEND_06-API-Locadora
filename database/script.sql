@@ -8,7 +8,7 @@ CREATE TABLE tbl_filme(
 	sinopse TEXT NULL,
 	data_lancamento DATE NULL,
 	duracao TIME NOT NULL,
-	orcamento DECIMAL NULL,
+	orcamento DECIMAL(11,2) NULL,
 	trailer VARCHAR(200) NULL,
 	capa VARCHAR(200) NOT NULL
 );

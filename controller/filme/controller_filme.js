@@ -54,39 +54,88 @@ const buscarFilmeId = async function (id) {
             console.log(MESSAGES.ERROR_REQUIRED_FIELDS)
             return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400   
         }
-
+        
         //Executando busca por id
         let resultFilmes = await filmeDAO.getSelectByIdMovies(Number(id));
-
+        
         //--------------Verificações da busca-----------//
         //Caso houve um erro na execução do model
         if (!resultFilmes) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
         }
-
+        
         //Caso não exista um item com id correspondente ao inserido
         if (resultFilmes <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
-
+        
         //---------------------------------------------//
-
+        
         //Montagem do Message
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
         MESSAGES.DEFAULT_HEADER.items.filme = resultFilmes;
-
+        
         return MESSAGES.DEFAULT_HEADER                                          //200
-
+        
     } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
-
+        
     }
-
+    
 }
 
 // Insere um registro de filme no banco de dados
-const inserirFilme = async function (filme) {}
+const inserirFilme = async function (filme, contentType) {
+    //Criando um novo objeto para as mensagens
+
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
+    try {
+        //Validação do tipo do conteúdo da requisição, nosso sistema só aceita JSON
+        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
+            return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
+
+        //Verificações de campos
+        let invalidInputs = [];
+
+        if (filme.nome == '' || filme.nome == undefined || filme.nome == null || filme.nome.length > 100)
+            invalidInputs.push('Nome');
+        if (filme.sinopse == undefined)
+            invalidInputs.push('Sinopse');
+        if (filme.data_lancamento == undefined || filme.data_lancamento.length != 10)
+            invalidInputs.push('Data');
+        if (filme.duracao == '' || filme.duracao == undefined || filme.duracao == null || filme.duracao.length != 8)
+            invalidInputs.push('Duracao');
+        if (filme.orcamento == '' || filme.orcamento == undefined || filme.orcamento == null || typeof (filme.orcamento) != 'number')
+            invalidInputs.push('Orcamento');
+        if (filme.trailer == undefined || filme.trailer.length > 200)
+            invalidInputs.push('Trailer');
+        if (filme.capa == '' || filme.capa == undefined || filme.capa == null || filme.capa.length > 200)
+            invalidInputs.push('Capa');
+
+        //Retornando em caso de campos invalidos
+        if (invalidInputs.length) {
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
+            return MESSAGES.ERROR_REQUIRED_FIELDS;
+        }
+        //Chama a função para inserir o novo filme no DB
+        let resultFilmes = await filmeDAO.setInsertMovies(filme);
+        if(resultFilmes){
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
+            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
+            //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
+
+            return MESSAGES.DEFAULT_HEADER                                      //201
+        }else{
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
+        }
+    } catch (error) {
+        console.log(error);
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
+    }
+
+}
 
 // Atualiza o registro de um filme correspondente ao id 
 const atualizarFilme = async function (filme, id) {
@@ -100,5 +149,8 @@ const excluirFilme = async function (id) {
 
 module.exports = {
     listarFilmes,
-    buscarFilmeId
+    buscarFilmeId,
+    inserirFilme,
+    atualizarFilme,
+    excluirFilme
 }

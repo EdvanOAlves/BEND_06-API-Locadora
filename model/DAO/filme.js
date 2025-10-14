@@ -5,28 +5,28 @@
  * Versão: 1.0.10.25
 **************************************************************************************************/
 
- /*************************************************************************************************/
- //COMANDOS UTILIZADOS
+/*************************************************************************************************/
+//COMANDOS UTILIZADOS
 
-    //$queryRawUnsafe -> permite executar um script SQL de uma variável 
-        // E que retorna valores do banco (SELECT)
-    //$executeRawUnsafe -> permite executar um script SQL de uma variável
-        //E NÃO retorna dados do banco (INSERT, UPDATE, DELETE)
+//$queryRawUnsafe -> permite executar um script SQL de uma variável 
+// E que retorna valores do banco (SELECT)
+//$executeRawUnsafe -> permite executar um script SQL de uma variável
+//E NÃO retorna dados do banco (INSERT, UPDATE, DELETE)
 
-    //$queryRaw -> permite executar um script SQL
-        //SEM estar em uma variável e que retorna valores do banco (SELECT)
-        //Faz tratamentos de segurança contra SQL Injection
-    //$executeRaw -> Permite executar um script SQL
-        //SEM estar em uma variável
-        //E NÃO retorna dados do banco
-        //faz tratamentos de segurança contra SQL Injection
+//$queryRaw -> permite executar um script SQL
+//SEM estar em uma variável e que retorna valores do banco (SELECT)
+//Faz tratamentos de segurança contra SQL Injection
+//$executeRaw -> Permite executar um script SQL
+//SEM estar em uma variável
+//E NÃO retorna dados do banco
+//faz tratamentos de segurança contra SQL Injection
 
- /**************************************************************************************************/
+/**************************************************************************************************/
 
- /*************************************************************************************************/
- //BIBLIOTECAS UTILIZADAS
+/*************************************************************************************************/
+//BIBLIOTECAS UTILIZADAS
 
- /*************************************************************************************************/
+/*************************************************************************************************/
 /*
     Exemplos de dependências para conexões com o BD
         Para Banco de Dados Relacionais
@@ -59,15 +59,15 @@ const getSelectAllMovies = async function () {
     try {
         //script SQL
         let sql = `SELECT * FROM tbl_filme ORDER BY id DESC`
-    
+
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
-    
+
         if (Array.isArray(result))
             return result;
         else
             return false;
-        
+
     } catch (error) {
         // console.log(error);
         return false;
@@ -80,27 +80,49 @@ const getSelectByIdMovies = async function (id) {
     try {
         //script SQL
         let sql = `SELECT * FROM tbl_filme  where id =${id}`
-    
+
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
-    
+
         if (Array.isArray(result))
             return result;
         else
             return false;
-        
+
     } catch (error) {
         // console.log(error);
         return false;
     }
 
- }
+}
 
 // Insere um filme novo no banco de dados
-const setInsertMovies = async function () {
-    TRY 
+const setInsertMovies = async function (filme) {
+    try {
+        let sql = `INSERT INTO tbl_filme(nome, sinopse, data_lancamento, duracao, orcamento, trailer, capa)
+	VALUES(
+	    '${filme.nome}',
+        '${filme.sinopse}',
+        '${filme.data_lancamento}',
+	    '${filme.duracao}',
+	    '${filme.orcamento}',
+	    "${filme.trailer}",
+	    "${filme.capa}");`
 
- }
+        //executeRawUnsafe -> Para executar script SQL sem retorno de valores
+        let result = await prisma.$executeRawUnsafe(sql);
+
+        if(result){
+            return true
+        }
+        else
+            return false
+    } catch (error) {
+        console.log(error)
+        return false
+    }
+
+}
 
 // Altera um filme no banco de dados
 const setUpdateMovies = async function (id) { }
