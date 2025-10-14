@@ -97,7 +97,10 @@ const getSelectByIdMovies = async function (id) {
  }
 
 // Insere um filme novo no banco de dados
-const setInsertMovies = async function () { }
+const setInsertMovies = async function () {
+    TRY 
+
+ }
 
 // Altera um filme no banco de dados
 const setUpdateMovies = async function (id) { }

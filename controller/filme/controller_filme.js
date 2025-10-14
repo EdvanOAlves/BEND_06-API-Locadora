@@ -33,13 +33,11 @@ const listarFilmes = async function () {
         if (resultFilmes.length < 0) {
             return MESSAGES.ERROR_NOT_FOUND;                //404
         }
+
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
         MESSAGES.DEFAULT_HEADER.items.filmes = resultFilmes;
         return MESSAGES.DEFAULT_HEADER;                 //200
-
-
-
 
     } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;       //500
@@ -49,42 +47,45 @@ const listarFilmes = async function () {
 // Retorna um filme correspondente ao id inserido
 const buscarFilmeId = async function (id) {
     //Criando um novo objeto para as mensagens
+    console.log('rodou 1')
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        //Válidação de chegada do ID, barra NaNs
-        if (isNaN(id)) {
-            return MESSAGES.ERROR_REQUIRED_FIELDS //400   
+        console.log('rodou 2')
+        //Válidação de chegada do ID, barrando NaNs
+        if (isNaN(id) || id == '' || id == null || id <= 0) {
+            console.log('rodou 3')
+            console.log(MESSAGES.ERROR_REQUIRED_FIELDS)
+            return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400   
         }
-
-
+        
         //Executando busca por id
         let resultFilmes = await filmeDAO.getSelectByIdMovies(Number(id));
-
-        //--------------VERIFICAÇÕES-----------//
+        console.log('rodou 4')
+        
+        //--------------Verificações da busca-----------//
         //Caso houve um erro na execução do model
         if (!resultFilmes) {
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL     //500
+            console.log('rodou 5')
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
         }
 
         //Caso não exista um item com id correspondente ao inserido
         if (resultFilmes <= 0) {
-            return MESSAGES.ERROR_NOT_FOUND;                //404
+            console.log('rodou 6')
+            return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
-        //------------------------------------//
-
+        //---------------------------------------------//
 
         //Montagem do Message
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
         MESSAGES.DEFAULT_HEADER.items.filme = resultFilmes;
 
-        return MESSAGES.DEFAULT_HEADER                      //200
-
-
+        return MESSAGES.DEFAULT_HEADER                                          //200
 
     } catch (error) {
-        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;   //500
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
 
     }
 
