@@ -141,10 +141,10 @@ const setUpdateMovies = async function (filme) {
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
         if(result){
-            return true
+            return true;
         }
         else
-            return false
+            return false;
     } catch (error) {
         return false
     }
@@ -152,7 +152,22 @@ const setUpdateMovies = async function (filme) {
 }
 
 // Exclui um filme pelo id no banco de dados
-const setDeleteMovies = async function (id) { }
+const setDeleteMovies = async function (id) {
+    try {
+        let sql = `DELETE FROM tbl_filme
+        WHERE id = ${id};`
+
+        let result = await prisma.$executeRawUnsafe(sql);
+        
+        if (result)
+            return true;
+        else
+            return false;
+    } catch (error) {
+        console.log(error)
+        return false;
+    }
+ }
 
 module.exports = {
     getSelectAllMovies,

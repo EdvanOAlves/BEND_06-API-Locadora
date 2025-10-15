@@ -51,7 +51,7 @@ const buscarFilmeId = async function (id) {
     try {
         //Válidação de chegada do ID, barrando NaNs e campos vazios
         if (isNaN(id) || id == '' || id == null || id == undefined || id <= 0) {
-            MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';  MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';    
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto'; MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';
             return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400   
         }
 
@@ -128,7 +128,7 @@ const atualizarFilme = async function (filme, id, contentType) {
         //Validação do tipo do conteúdo da requisição, nosso sistema só aceita JSON
         if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
             return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
-        
+
         // Chama a função de validar os dados do filme
         let falha = await verificarFalhas(filme)
         if (falha.length) {
@@ -137,7 +137,7 @@ const atualizarFilme = async function (filme, id, contentType) {
 
         //Verificando existencia do filme
         let validarId = await buscarFilmeId(id);
-        
+
         //Caso houve um erro na execução do model
         if (validarId.status_code != 200) {
             return validarId                                                    // 400 referente a id / 404 / 500 
@@ -157,9 +157,9 @@ const atualizarFilme = async function (filme, id, contentType) {
             //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
 
             return MESSAGES.DEFAULT_HEADER                                      //200
-        } else {
+        } else 
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
-        }
+        
     } catch (error) {
         console.log(error);
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
@@ -169,7 +169,31 @@ const atualizarFilme = async function (filme, id, contentType) {
 
 // Exclui o registro de um filme correspondente ao id
 const excluirFilme = async function (id) {
+    //Criando um novo objeto para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
+    try {
+        //Verificando existencia do filme
+        let validarId = await buscarFilmeId(id);
 
+        //Caso houve um erro na execução do model
+        if (validarId.status_code != 200) {
+            return validarId                                                    // 400 referente a id / 404 / 500 
+        }
+
+        let resultFilmes = await filmeDAO.setDeleteMovies(id);
+        if (resultFilmes) {
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
+            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_REQUEST.message;
+            
+            return MESSAGES.DEFAULT_HEADER                                      //200
+        }
+        else
+        return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                            //500
+
+    } catch (error) {
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500 
+    }
 }
 
 // Função reutilizável para validação de dados de cadastro e atualização do filme
