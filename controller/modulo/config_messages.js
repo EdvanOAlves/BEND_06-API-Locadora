@@ -27,6 +27,12 @@ const SUCCESS_REQUEST = {
     message: 'Requisição bem sucedida!'
 }
 
+const SUCCESS_UPDATED_ITEM = {
+    status: true,
+    status_code: 200,
+    message: 'Item atualizado com sucesso!'
+}
+
 const SUCCESS_CREATED_ITEM ={
     status: true,
     status_code: 201,
@@ -67,6 +73,7 @@ const ERROR_INTERNAL_SERVER_MODEL = {
 module.exports = {
     DEFAULT_HEADER,
     SUCCESS_REQUEST,
+    SUCCESS_UPDATED_ITEM,
     SUCCESS_CREATED_ITEM,
     ERROR_REQUIRED_FIELDS,
     ERROR_NOT_FOUND,

@@ -87,18 +87,36 @@ app.get('/v1/locadora/filme/:id', cors(), async function (request, response){
 })
 //Boa prática: Quando passamos primary Key é interessante colocar essa PK como parâmetro, itens de filtro são parâmetros de rota mesmo
 
+//Insere um novo filme no DB
 app.post('/v1/locadora/filme/', cors(), bodyParserJSON, async function(request, response){
-   //Recebeb os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
    let dadosBody = request.body;
 
-   //Recebe o tipo de dados da requisição (JSON, XML ou...)
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
    let contentType = request.headers['content-type']
 
    //Chama a função da controller para inserir o novo filme, encaminhando os dados e tipo de conteúdo
    let filme = await controllerFilme.inserirFilme(dadosBody , contentType);
    response.status(filme.status_code);
    response.json(filme);
+})
 
+// Atualiza no DB o filme correspondente ao id
+app.put('/v1/locadora/filme/:id', cors(), bodyParserJSON, async function(request, response){
+   //Recebe o ID do filme
+   let idFilme = request.params.id;
+
+   //Recebe os dados a serem atualizado
+   let dadosBody = request.body;
+   
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type'];
+
+   //Chamando função para atualizar o filme, encaminhando os dados, id e content type
+   let filme = await controllerFilme.atualizarFilme(dadosBody, idFilme, contentType);
+
+   response.status(filme.status_code);
+   response.json(filme);
 })
 
 app.listen(PORT, function(){

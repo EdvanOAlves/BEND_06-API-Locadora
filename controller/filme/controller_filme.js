@@ -49,9 +49,9 @@ const buscarFilmeId = async function (id) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        //Válidação de chegada do ID, barrando NaNs
+        //Válidação de chegada do ID, barrando NaNs e campos vazios
         if (isNaN(id) || id == '' || id == null || id == undefined || id <= 0) {
-            console.log(MESSAGES.ERROR_REQUIRED_FIELDS)
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';  MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';    
             return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400   
         }
 
@@ -96,7 +96,7 @@ const inserirFilme = async function (filme, contentType) {
 
         // Chama a função de validar os dados do filme
         let falha = await verificarFalhas(filme)
-        if(falha){
+        if (falha) {
             return falha                                                        //400
         }
 
@@ -121,6 +121,49 @@ const inserirFilme = async function (filme, contentType) {
 
 // Atualiza o registro de um filme correspondente ao id 
 const atualizarFilme = async function (filme, id, contentType) {
+    //Criando um novo objeto para as mensagens
+    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
+    try {
+        /*------------------------------VALIDAÇÕES------------------------------------*/
+        //Validação do tipo do conteúdo da requisição, nosso sistema só aceita JSON
+        if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
+            return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
+        
+        // Chama a função de validar os dados do filme
+        let falha = await verificarFalhas(filme)
+        if (falha.length) {
+            return falha                                                        //400 referente a dados de input(filme)
+        }
+
+        //Verificando existencia do filme
+        let validarId = await buscarFilmeId(id);
+        
+        //Caso houve um erro na execução do model
+        if (validarId.status_code != 200) {
+            return validarId                                                    // 400 referente a id / 404 / 500 
+        }
+        /*-----------------------------------------------------------------------------*/
+
+        //Adiciona o id do parâmetro no JSON de dados a ser encaminhado ao DAO
+        filme.id = Number(id);
+
+        //Chama a função para inserir o novo filme no DB
+        let resultFilmes = await filmeDAO.setUpdateMovies(filme, id);
+        if (resultFilmes) {
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status;
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code;
+            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_UPDATED_ITEM.message;
+            MESSAGES.DEFAULT_HEADER.items.filme = filme
+            //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
+
+            return MESSAGES.DEFAULT_HEADER                                      //200
+        } else {
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
+        }
+    } catch (error) {
+        console.log(error);
+        return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
+    }
 
 }
 
