@@ -182,11 +182,11 @@ const excluirFilme = async function (id) {
 
         let resultFilmes = await filmeDAO.setDeleteMovies(id);
         if (resultFilmes) {
-            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
-            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
-            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_REQUEST.message;
+            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
+            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
+            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message;
             
-            return MESSAGES.DEFAULT_HEADER                                      //200
+            return MESSAGES.DEFAULT_HEADER                                      //204
         }
         else
         return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                            //500
