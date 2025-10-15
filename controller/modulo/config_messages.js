@@ -33,6 +33,11 @@ const SUCCESS_UPDATED_ITEM = {
     message: 'Item atualizado com sucesso!'
 }
 
+const SUCCESS_DELETED_ITEM = {
+    status: true,
+    status_code: 200,
+    message: 'Item deletado com sucesso!'
+}
 
 const SUCCESS_CREATED_ITEM ={
     status: true,
@@ -40,11 +45,6 @@ const SUCCESS_CREATED_ITEM ={
     message: 'Item criado com sucesso!'
 }
 
-const SUCCESS_DELETED_ITEM = {
-    status: true,
-    status_code: 204,
-    message: 'Item deletado com sucesso!'
-}
 
 /*************************************** MENSAGENS DE ERRO ****************************************/
 const ERROR_REQUIRED_FIELDS = {
