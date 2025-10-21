@@ -102,16 +102,28 @@ const inserirFilme = async function (filme, contentType) {
 
         //Chama a função para inserir o novo filme no DB
         let resultFilmes = await filmeDAO.setInsertMovies(filme);
-        if (resultFilmes) {
-            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
-            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
-            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
-            //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
-
-            return MESSAGES.DEFAULT_HEADER                                      //201
-        } else {
+        if (!resultFilmes) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
         }
+
+        //Preparo para retorno de caso 200
+        //Chama a função para receber o ID gerado no BD
+        let lastID = await filmeDAO.getSelectLastId();
+
+        if (!lastID)
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL
+
+        filme.id = lastID
+        MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
+        MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
+        MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
+        MESSAGES.DEFAULT_HEADER.items = filme
+
+
+        //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
+
+        return MESSAGES.DEFAULT_HEADER                                      //201
+
     } catch (error) {
         console.log(error);
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
@@ -157,9 +169,9 @@ const atualizarFilme = async function (filme, id, contentType) {
             //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
 
             return MESSAGES.DEFAULT_HEADER                                      //200
-        } else 
+        } else
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
-        
+
     } catch (error) {
         console.log(error);
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
@@ -185,11 +197,11 @@ const excluirFilme = async function (id) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
             MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message;
-            
+
             return MESSAGES.DEFAULT_HEADER                                      //204
         }
         else
-        return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                            //500
+            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                            //500
 
     } catch (error) {
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500 
