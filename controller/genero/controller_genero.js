@@ -216,7 +216,7 @@ const verificarFalhas = async function (genero) {
 
     let invalidInputs = [];
 
-    if (genero.nome == '' || genero.nome == undefined || genero.nome == null || genero.nome.length > 100)
+    if (genero.nome == '' || genero.nome == undefined || genero.nome == null || genero.nome.length > 20)
         invalidInputs.push('Nome');
     //Retornando em caso de campos invalidos
     if (invalidInputs.length) {
