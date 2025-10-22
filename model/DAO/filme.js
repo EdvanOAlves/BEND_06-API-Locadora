@@ -79,7 +79,7 @@ const getSelectAllMovies = async function () {
 const getSelectByIdMovies = async function (id) {
     try {
         //script SQL
-        let sql = `SELECT * FROM tbl_filme  where id =${id}`
+        let sql = `SELECT * FROM tbl_filme  where filme_id =${id}`
 
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
@@ -100,7 +100,7 @@ const getSelectByIdMovies = async function (id) {
 const getSelectLastId = async function(){
     try {
         //Script SQL
-        let sql = `SELECT id FROM tbl_filme ORDER BY ID DESC LIMIT 1`;
+        let sql = `SELECT filme_id FROM tbl_filme ORDER BY filme_id DESC LIMIT 1`;
         
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql);
@@ -156,7 +156,7 @@ const setUpdateMovies = async function (filme) {
             orcamento = '${filme.orcamento}',
             trailer = "${filme.trailer}",
             capa = "${filme.capa}"
-        WHERE id = ${filme.id};`
+        WHERE filme_id = ${filme.id};`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
@@ -175,7 +175,7 @@ const setUpdateMovies = async function (filme) {
 const setDeleteMovies = async function (id) {
     try {
         let sql = `DELETE FROM tbl_filme
-        WHERE id = ${id};`
+        WHERE filme_id = ${id};`
 
         let result = await prisma.$executeRawUnsafe(sql);
         
