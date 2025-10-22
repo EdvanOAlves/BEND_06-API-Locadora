@@ -23,7 +23,7 @@ INSERT INTO tbl_filme(nome, sinopse, data_lancamento, duracao, orcamento, traile
     --Orcamento eu estipulei, não tem esse valor online
 
 
--- Comandos soltos:
+-- SELECTS (Para testes):
 
 SELECT * FROM tbl_filme;
 SELECT nome, data_lancamento, duracao, orcamento, trailer, capa;
