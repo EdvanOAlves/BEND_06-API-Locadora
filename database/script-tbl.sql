@@ -1,6 +1,11 @@
 -- CRIAÇÃO DE BANCO DE DADOS
 CREATE DATABASE db_locadora_filme_ds2m_25_2;
 
+--------------------------------------------------------------------------------------------------------
+--                                          CRIAÇÃO DE TABELAS
+--------------------------------------------------------------------------------------------------------
+
+
 -- Filme
 CREATE TABLE tbl_filme(
 	filme_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -13,10 +18,18 @@ CREATE TABLE tbl_filme(
 	capa VARCHAR(200) NOT NULL
 );
 
--- -- Classificação Indicativa
--- CREATE TABLE tbl_classificacao_indicativa(
---     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
--- );
+------------------------------
+-- Tabelas Independentes
+------------------------------
+
+
+-- Classificação Indicativa
+CREATE TABLE tbl_classificacao_indicativa(
+    classificacao_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    nivel_classificacao VARCHAR(5) NOT NULL,
+    descricao VARCHAR(45)
+);
+
 -- -- Idioma
 -- CREATE TABLE tbl_idioma(
 --     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
