@@ -28,9 +28,9 @@ CREATE TABLE tbl_genero(
     nome VARCHAR(20) NOT NULL
 );
 
--- -- Mídia
--- CREATE TABLE tbl_midia(
---     midia_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+-- -- Formato
+-- CREATE TABLE tbl_formato(
+--     formato_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 -- );
 -- -- Nacionalidade
 -- CREATE TABLE tbl_nacionalidade(

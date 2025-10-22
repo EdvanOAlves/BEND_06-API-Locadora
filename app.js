@@ -61,12 +61,17 @@ app.use((request, response, next) => {
 
 //Import das controllers
 const controllerFilme = require('./controller/filme/controller_filme.js')
+const controllerGenero = require('./controller/genero/controller_genero.js')
 
-/*
-ENDPOINTS
-*/
+/**************************************************************************************************/
+// ENDPOINTS
+/**************************************************************************************************/
 
-//Rota de Filmes
+
+
+//-------------------------------- ROTAS FILMES --------------------------------//
+
+
 
 app.get('/v1/locadora/filme', cors(), async function (request, response) {
    // Chama a função para listar os filmes do DB
@@ -76,11 +81,12 @@ app.get('/v1/locadora/filme', cors(), async function (request, response) {
 })
 
 app.get('/v1/locadora/filme/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
+   // Chama a função para buscar o filme por Id
+
+   // Recebe o ID encaminhado via parâmetro na requisição
    const idFilme = request.params.id;
 
-
-   // Chama a função para listar os filmes do DB
+   // Chamando a função para realizar a consulta no DB
    let filme = await controllerFilme.buscarFilmeId(idFilme);
    response.status = filme.status_code;
    response.json(filme);
@@ -124,12 +130,75 @@ app.delete('/v1/locadora/filme/:id', cors(), async function (request, response) 
    const idFilme = request.params.id;
 
 
-   // Chama a função para listar os filmes do DB
+   // Chama a função para excluir o filme do DB
    let filme = await controllerFilme.excluirFilme(idFilme);
    response.status = filme.status_code;
    response.json(filme);
 
 })
+
+
+//-------------------------------- ROTAS GÊNERO --------------------------------//
+app.get('/v1/locadora/genero', cors(), async function (request, response) {
+   // Chama a função para listar os generos do DB
+   let genero = await controllerGenero.listarGeneros();
+   response.status = genero.status_code;
+   response.json(genero);
+})
+
+app.get('/v1/locadora/genero/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idGenero = request.params.id;
+
+   let genero = await controllerGenero.buscarGeneroId(idGenero);
+   response.status = genero.status_code;
+   response.json(genero);
+})
+
+//Insere um novo genero no DB
+app.post('/v1/locadora/genero/', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type']
+
+   //Chama a função da controller para inserir o novo genero, encaminhando os dados e tipo de conteúdo
+   let genero = await controllerGenero.inserirGenero(dadosBody, contentType);
+   response.status(genero.status_code);
+   response.json(genero);
+})
+
+// Atualiza no DB o genero correspondente ao id
+app.put('/v1/locadora/genero/:id', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe o ID do genero
+   let idGenero = request.params.id;
+
+   //Recebe os dados a serem atualizados
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type'];
+
+   //Chamando função para atualizar o genero, encaminhando os dados, id e content type
+   let genero = await controllerGenero.atualizarGenero(dadosBody, idGenero, contentType);
+
+   response.status(genero.status_code);
+   response.json(genero);
+})
+
+app.delete('/v1/locadora/genero/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idGenero = request.params.id;
+
+   // Chama a função para excluir o genero do DB
+   let genero = await controllerGenero.excluirGenero(idGenero);
+   response.status = genero.status_code;
+   response.json(genero);
+
+})
+
+
 
 app.listen(PORT, function () {
    console.log('Hello world! \n API está operante, escutante e funcionante!')

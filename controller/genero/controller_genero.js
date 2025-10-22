@@ -1,7 +1,7 @@
 /**************************************************************************************************
  * Objetivo: Arquivo responsável pela manipulação de dados entre o APP e a Model
  * Autor: Edvan Alves
- * Data: 07/10/2025
+ * Data: 22/10/2025
  * Versão: 1.0.10.25
  **************************************************************************************************/
 
@@ -13,30 +13,30 @@
 //BIBLIOTECAS UTILIZADAS
 /**************************************************************************************************/
 
-//Import da model do DAO de Filme
-const filmeDAO = require('../../model/DAO/filme.js');
+//Import da model do DAO de Genero
+const generoDAO = require('../../model/DAO/genero.js');
 
 //Import do arquivo de mensagens
 const DEFAULT_MESSAGES = require('../modulo/config_messages.js');
 
-// Retorna uma lista com todos os filmes
-const listarFilmes = async function () {
+// Retorna uma lista com todos os generos
+const listarGeneros = async function () {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        // Chama a função do DAO para retornar a lista de Filmes
-        let resultFilmes = await filmeDAO.getSelectAllMovies();
+        // Chama a função do DAO para retornar a lista de Generos
+        let resultGeneros = await generoDAO.getSelectAllGenres();
 
-        if (!resultFilmes) {
+        if (!resultGeneros) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;        //500
         }
-        if (resultFilmes.length < 0) {
+        if (resultGeneros.length < 0) {
             return MESSAGES.ERROR_NOT_FOUND;                    //404
         }
 
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
-        MESSAGES.DEFAULT_HEADER.items.filmes = resultFilmes;
+        MESSAGES.DEFAULT_HEADER.items.generos = resultGeneros;
         return MESSAGES.DEFAULT_HEADER;                         //200
 
     } catch (error) {
@@ -44,8 +44,8 @@ const listarFilmes = async function () {
     }
 }
 
-// Retorna um filme correspondente ao id inserido
-const buscarFilmeId = async function (id) {
+// Retorna um genero correspondente ao id inserido
+const buscarGeneroId = async function (id) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
@@ -56,16 +56,16 @@ const buscarFilmeId = async function (id) {
         }
 
         //Executando busca por id
-        let resultFilmes = await filmeDAO.getSelectByIdMovies(Number(id));
+        let resultGeneros = await generoDAO.getSelectByIdGenres(Number(id));
 
         //--------------Verificações da busca-----------//
         //Caso houve um erro na execução do model
-        if (!resultFilmes) {
+        if (!resultGeneros) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFilmes <= 0) {
+        if (resultGeneros <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -74,7 +74,7 @@ const buscarFilmeId = async function (id) {
         //Montagem do Message
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
-        MESSAGES.DEFAULT_HEADER.items.filme = resultFilmes;
+        MESSAGES.DEFAULT_HEADER.items.genero = resultGeneros;
 
         return MESSAGES.DEFAULT_HEADER                                          //200
 
@@ -85,8 +85,8 @@ const buscarFilmeId = async function (id) {
 
 }
 
-// Insere um registro de filme no banco de dados
-const inserirFilme = async function (filme, contentType) {
+// Insere um registro de genero no banco de dados
+const inserirGenero = async function (genero, contentType) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
@@ -94,33 +94,34 @@ const inserirFilme = async function (filme, contentType) {
         if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
             return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
 
-        // Chama a função de validar os dados do filme
-        let falha = await verificarFalhas(filme)
+        // Chama a função de validar os dados do genero
+        let falha = await verificarFalhas(genero)
         if (falha) {
             return falha                                                        //400
         }
 
-        //Chama a função para inserir o novo filme no DB
-        let resultFilmes = await filmeDAO.setInsertMovies(filme);
-        if (!resultFilmes) {
+        //Chama a função para inserir o novo genero no DB
+        let resultGeneros = await generoDAO.setInsertGenres(genero);
+        if (!resultGeneros) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
         }
 
         //Preparo para retorno de caso 200
         //Chama a função para receber o ID gerado no BD
-        let lastID = await filmeDAO.getSelectLastId();
+        let lastID = await generoDAO.getSelectLastId();
 
-        if (!lastID)
+        if (!lastID){
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
+        }
 
-        filme.id = lastID
+        genero.id = lastID
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
         MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
-        MESSAGES.DEFAULT_HEADER.items = filme
+        MESSAGES.DEFAULT_HEADER.items = genero
 
 
-        //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
+        //TODO: É interessante retornar os dados registrados do genero, usando o get do DB
 
         return MESSAGES.DEFAULT_HEADER                                      //201
 
@@ -131,8 +132,8 @@ const inserirFilme = async function (filme, contentType) {
 
 }
 
-// Atualiza o registro de um filme correspondente ao id 
-const atualizarFilme = async function (filme, id, contentType) {
+// Atualiza o registro de um genero correspondente ao id 
+const atualizarGenero = async function (genero, id, contentType) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
@@ -141,14 +142,14 @@ const atualizarFilme = async function (filme, id, contentType) {
         if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
             return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
 
-        // Chama a função de validar os dados do filme
-        let falha = await verificarFalhas(filme)
+        // Chama a função de validar os dados do genero
+        let falha = await verificarFalhas(genero)
         if (falha.length) {
-            return falha                                                        //400 referente a dados de input(filme)
+            return falha                                                        //400 referente a dados de input(genero)
         }
 
-        //Verificando existencia do filme
-        let validarId = await buscarFilmeId(id);
+        //Verificando existencia do genero
+        let validarId = await buscarGeneroId(id);
 
         //Caso houve um erro na execução do model
         if (validarId.status_code != 200) {
@@ -157,16 +158,16 @@ const atualizarFilme = async function (filme, id, contentType) {
         /*-----------------------------------------------------------------------------*/
 
         //Adiciona o id do parâmetro no JSON de dados a ser encaminhado ao DAO
-        filme.id = Number(id);
+        genero.id = Number(id);
 
-        //Chama a função para inserir o novo filme no DB
-        let resultFilmes = await filmeDAO.setUpdateMovies(filme, id);
-        if (resultFilmes) {
+        //Chama a função para inserir o novo genero no DB
+        let resultGeneros = await generoDAO.setUpdateGenres(genero, id);
+        if (resultGeneros) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code;
             MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_UPDATED_ITEM.message;
-            MESSAGES.DEFAULT_HEADER.items.filme = filme
-            //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
+            MESSAGES.DEFAULT_HEADER.items.genero = genero
+            //TODO: É interessante retornar os dados registrados do genero, usando o get do DB
 
             return MESSAGES.DEFAULT_HEADER                                      //200
         } else
@@ -179,21 +180,21 @@ const atualizarFilme = async function (filme, id, contentType) {
 
 }
 
-// Exclui o registro de um filme correspondente ao id
-const excluirFilme = async function (id) {
+// Exclui o registro de um genero correspondente ao id
+const excluirGenero = async function (id) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        //Verificando existencia do filme
-        let validarId = await buscarFilmeId(id);
+        //Verificando existencia do genero
+        let validarId = await buscarGeneroId(id);
 
         //Caso houve um erro na execução do model
         if (validarId.status_code != 200) {
             return validarId                                                    // 400 referente a id / 404 / 500 
         }
 
-        let resultFilmes = await filmeDAO.setDeleteMovies(id);
-        if (resultFilmes) {
+        let resultGeneros = await generoDAO.setDeleteGenres(id);
+        if (resultGeneros) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
             MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message;
@@ -208,28 +209,15 @@ const excluirFilme = async function (id) {
     }
 }
 
-// Função reutilizável para validação de dados de cadastro e atualização do filme
-const verificarFalhas = async function (filme) {
+// Função reutilizável para validação de dados de cadastro e atualização do genero
+const verificarFalhas = async function (genero) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
 
     let invalidInputs = [];
 
-    if (filme.nome == '' || filme.nome == undefined || filme.nome == null || filme.nome.length > 100)
+    if (genero.nome == '' || genero.nome == undefined || genero.nome == null || genero.nome.length > 100)
         invalidInputs.push('Nome');
-    if (filme.sinopse == undefined)
-        invalidInputs.push('Sinopse');
-    if (filme.data_lancamento == undefined || filme.data_lancamento.length != 10)
-        invalidInputs.push('Data');
-    if (filme.duracao == '' || filme.duracao == undefined || filme.duracao == null || filme.duracao.length != 8)
-        invalidInputs.push('Duracao');
-    if (filme.orcamento == '' || filme.orcamento == undefined || filme.orcamento == null || typeof (filme.orcamento) != 'number')
-        invalidInputs.push('Orcamento');
-    if (filme.trailer == undefined || filme.trailer.length > 200)
-        invalidInputs.push('Trailer');
-    if (filme.capa == '' || filme.capa == undefined || filme.capa == null || filme.capa.length > 200)
-        invalidInputs.push('Capa');
-
     //Retornando em caso de campos invalidos
     if (invalidInputs.length) {
         MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
@@ -241,9 +229,9 @@ const verificarFalhas = async function (filme) {
 }
 
 module.exports = {
-    listarFilmes,
-    buscarFilmeId,
-    inserirFilme,
-    atualizarFilme,
-    excluirFilme
+    listarGeneros,
+    buscarGeneroId,
+    inserirGenero,
+    atualizarGenero,
+    excluirGenero
 }
