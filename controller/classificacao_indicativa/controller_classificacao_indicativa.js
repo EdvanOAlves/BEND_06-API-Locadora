@@ -24,8 +24,8 @@ const listarClassificacoes = async function () {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        // Chama a função do DAO para retornar a lista de Generos
-        let resultClassificacao = await classificacaoDAO.getSelectAllGenres();
+        // Chama a função do DAO para retornar a lista de Classificações
+        let resultClassificacao = await classificacaoDAO.getSelectAllContentRatings();
 
         if (!resultClassificacao) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;        //500
@@ -56,7 +56,7 @@ const buscarClassificacaoId = async function (id) {
         }
 
         //Executando busca por id
-        let resultClassificacao = await classificacaoDAO.getSelectByIdGenres(Number(id));
+        let resultClassificacao = await classificacaoDAO.getSelectByIdContentRatings(Number(id));
 
         //--------------Verificações da busca-----------//
         //Caso houve um erro na execução do model
@@ -101,14 +101,14 @@ const inserirClassificacao = async function (classificacao, contentType) {
         }
 
         //Chama a função para inserir a nova classificação no DB
-        let resultClassificacao = await classificacaoDAO.setInsertGenres(classificacao);
+        let resultClassificacao = await classificacaoDAO.setInsertContentRatings(classificacao);
         if (!resultClassificacao) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
         }
 
         //Preparo para retorno de caso 200
         //Chama a função para receber o ID gerado no BD
-        let lastID = await generoDAO.getSelectLastId();
+        let lastID = await classificacaoDAO.getSelectLastId();
 
         if (!lastID){
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
@@ -119,9 +119,6 @@ const inserirClassificacao = async function (classificacao, contentType) {
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
         MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
         MESSAGES.DEFAULT_HEADER.items = classificacao
-
-
-        //TODO: É interessante retornar os dados registrados do classificacao, usando o get do DB
 
         return MESSAGES.DEFAULT_HEADER                                      //201
 
@@ -149,7 +146,7 @@ const atualizarClassificacao = async function (classificacao, id, contentType) {
         }
 
         //Verificando existencia do classificacao
-        let validarId = await buscarGeneroId(id);
+        let validarId = await buscarClassificacaoId(id);
 
         //Caso houve um erro na execução do model
         if (validarId.status_code != 200) {
@@ -161,7 +158,7 @@ const atualizarClassificacao = async function (classificacao, id, contentType) {
         classificacao.id = Number(id);
 
         //Chama a função para inserir o novo classificacao no DB
-        let resultClassificacao = await generoDAO.setUpdateGenres(classificacao, id);
+        let resultClassificacao = await classificacaoDAO.setUpdateContentRatings(classificacao, id);
         if (resultClassificacao) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code;
@@ -186,14 +183,14 @@ const excluirClassificacao = async function (id) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
         //Verificando existencia do classificacao
-        let validarId = await buscarGeneroId(id);
+        let validarId = await buscarClassificacaoId(id);
 
         //Caso houve um erro na execução do model
         if (validarId.status_code != 200) {
             return validarId                                                    // 400 referente a id / 404 / 500 
         }
 
-        let resultClassificacao = await generoDAO.setDeleteGenres(id);
+        let resultClassificacao = await classificacaoDAO.setDeleteContentRatings(id);
         if (resultClassificacao) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
@@ -215,14 +212,14 @@ const verificarFalhas = async function (classificacao) {
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
 
     let invalidInputs = [];
-
     if (classificacao.nivel == '' || classificacao.nivel == undefined || classificacao.nivel == null || classificacao.nivel.length > 5)
         invalidInputs.push('Nível');
-    if (classificacao.descricao == '' || classificacao.descricao == undefined || classificacao.descricao == null || classificacao.nivel.descricao > 45)
+    if (classificacao.descricao == '' || classificacao.descricao == undefined || classificacao.descricao == null || classificacao.descricao.length > 45)
         invalidInputs.push('Descrição');
+
     //Retornando em caso de campos invalidos
     if (invalidInputs.length) {
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += ` Campos incorretos: ${invalidInputs}`;
         return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400
     }
     else

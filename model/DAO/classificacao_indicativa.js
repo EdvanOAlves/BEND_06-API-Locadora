@@ -121,8 +121,7 @@ const getSelectLastId = async function () {
 const setInsertContentRatings = async function (classificacao) {
     try {
         let sql = `INSERT INTO tbl_classificacao_indicativa(nivel_classificacao, descricao)
-    VALUES(
-        '${genero.nome}');`
+        VALUES('${classificacao.nivel}', '${classificacao.descricao}');`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
@@ -146,7 +145,8 @@ const setUpdateContentRatings = async function (classificacao) {
         let sql = `UPDATE tbl_classificacao_indicativa
         SET 
             nivel_classificacao = '${classificacao.nivel_classificacao}'
-        WHERE genero_id = ${classificacao.descricao};`
+            descricao = '${classificacao.descricao}'
+        WHERE classificao_id = '${classificacao.id}';`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
@@ -161,7 +161,7 @@ const setUpdateContentRatings = async function (classificacao) {
 
 }
 
-// Exclui um genero pelo id no banco de dados
+// Exclui uma classificação pelo id no banco de dados
 const setDeleteContentRatings = async function (id) {
     try {
         let sql = `DELETE FROM tbl_classificacao_indicativa
