@@ -161,7 +161,7 @@ const atualizarGenero = async function (genero, id, contentType) {
         genero.id = Number(id);
 
         //Chama a função para inserir o novo genero no DB
-        let resultGeneros = await generoDAO.setUpdateGenres(genero, id);
+        let resultGeneros = await generoDAO.setUpdateGenres(genero);
         if (resultGeneros) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code;

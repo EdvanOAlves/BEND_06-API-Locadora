@@ -158,7 +158,7 @@ const atualizarClassificacao = async function (classificacao, id, contentType) {
         classificacao.id = Number(id);
 
         //Chama a função para inserir o novo classificacao no DB
-        let resultClassificacao = await classificacaoDAO.setUpdateContentRatings(classificacao, id);
+        let resultClassificacao = await classificacaoDAO.setUpdateContentRatings(classificacao);
         if (resultClassificacao) {
             MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_UPDATED_ITEM.status;
             MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_UPDATED_ITEM.status_code;
