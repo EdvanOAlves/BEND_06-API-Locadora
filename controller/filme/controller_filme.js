@@ -51,7 +51,7 @@ const buscarFilmeId = async function (id) {
     try {
         //Válidação de chegada do ID, barrando NaNs e campos vazios
         if (isNaN(id) || id == '' || id == null || id == undefined || id <= 0) {
-            MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto'; MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id incorreto';
+            MESSAGES.ERROR_REQUIRED_FIELDS.message += 'Id inválido';
             return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400   
         }
 
