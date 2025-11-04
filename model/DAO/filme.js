@@ -58,10 +58,10 @@ const prisma = new PrismaClient;
 const getSelectAllMovies = async function () {
     try {
         //script SQL
-        let sql = `SELECT * FROM tbl_filme ORDER BY id DESC`
+        let sql = `SELECT * FROM tbl_filme ORDER BY filme_id DESC`
 
         //Encaminha o script SQL para o BD
-        let result = await prisma.$queryRawUnsafe(sql)
+        let result = await prisma.$queryRawUnsafe(sql);
 
         if (Array.isArray(result))
             return result;
@@ -69,7 +69,6 @@ const getSelectAllMovies = async function () {
             return false;
 
     } catch (error) {
-        // console.log(error);
         return false;
     }
 
@@ -106,7 +105,7 @@ const getSelectLastId = async function(){
         let result = await prisma.$queryRawUnsafe(sql);
 
         if (Array.isArray(result)){
-            return Number(result[0].id);
+            return Number(result[0].filme_id);
         }
         else
             return false;

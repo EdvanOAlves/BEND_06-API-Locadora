@@ -109,18 +109,21 @@ const inserirFilme = async function (filme, contentType) {
         //Preparo para retorno de caso 200
         //Chama a função para receber o ID gerado no BD
         let lastID = await filmeDAO.getSelectLastId();
+        console.log(lastID)
 
         if (!lastID)
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
+        // Ainda acho que poderia ter uma tratativa melhor para isso
+        //
+        // - Se caiu nesse cenário o insert funcionou, ele só não conseguiu
+        //   retornar o id para o usuário, tinha que ser uma mensagem diferente
+        //   Ou... Deletar o ultimo registro para o usuário cadastrar de novo?
 
         filme.id = lastID
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
         MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
         MESSAGES.DEFAULT_HEADER.items = filme
-
-
-        //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
 
         return MESSAGES.DEFAULT_HEADER                                      //201
 

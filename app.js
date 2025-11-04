@@ -32,10 +32,12 @@
 //Import das dependências da API
 const express = require('express');        // Responsável pela API
 const cors = require('cors');              // Responsável pelas permissões da API (APP)
-const bodyParser = require('body-parser');  // Responsável por gerenciar a chegada dos dados da API com o front
+
+// Criando uma instância de uma classe do Express
+const app = express();
 
 //Criando objeto especialista no formato JSON para recebimento de dados via POST e PUT
-const bodyParserJSON = bodyParser.json();
+// const bodyParserJSON = bodyParser.json();
 
 //Import do arquivo de Funções
 const dados = require('./controller/filme/controller_filme.js');
@@ -44,10 +46,6 @@ const dados = require('./controller/filme/controller_filme.js');
 const PORT = process.PORT || 8080
 //process.PORT é essencial para nossa API rodar em servidor, ele que vai escolher a porta
 //|| 8080 É nossa configuração padrão, caso não exista um servidor para decidir essa porta, importante para uso local
-
-
-// Criando uma instância de uma classe do Express
-const app = express();
 
 //Configuração de permissões
 app.use((request, response, next) => {
@@ -59,324 +57,20 @@ app.use((request, response, next) => {
    next()// Próximo, carregar os próximos endpoints
 })
 
-//Import das controllers
-const controllerFilme = require('./controller/filme/controller_filme.js');
-const controllerGenero = require('./controller/genero/controller_genero.js');
-const controllerClassificacao = require('./controller/classificacao_indicativa/controller_classificacao_indicativa.js');
-const controllerIdioma = require('./controller/idioma/controller_idioma.js');
-const controllerFormato = require('./controller/formato_audiovisual/controller_formato.js')
+// Import das rotas
+const filmeRoutes = require('./routes/route-filme.js');
+const generoRoutes = require('./routes/route-genero.js');
+const classificacaoRoutes = require('./routes/route-classificacao_indicativa.js');
+const idiomaRoutes = require('./routes/route-idioma.js');
+const formatoRoutes = require('./routes/route-formato.js');
+
+// Rotas Principais
+app.use(filmeRoutes);
+app.use(generoRoutes);
+app.use(classificacaoRoutes);
+app.use(idiomaRoutes);
+app.use(formatoRoutes);
 
-/**************************************************************************************************/
-// ENDPOINTS
-/**************************************************************************************************/
-
-
-
-//-------------------------------- ROTAS FILMES --------------------------------//
-
-app.get('/v1/locadora/filme', cors(), async function (request, response) {
-   // Chama a função para listar os filmes do DB
-   let filme = await controllerFilme.listarFilmes();
-   response.status = filme.status_code;
-   response.json(filme);
-})
-
-app.get('/v1/locadora/filme/:id', cors(), async function (request, response) {
-   // Chama a função para buscar o filme por Id
-
-   // Recebe o ID encaminhado via parâmetro na requisição
-   const idFilme = request.params.id;
-
-   // Chamando a função para realizar a consulta no DB
-   let filme = await controllerFilme.buscarFilmeId(idFilme);
-   response.status = filme.status_code;
-   response.json(filme);
-})
-//Boa prática: Quando passamos primary Key é interessante colocar essa PK como parâmetro, itens de filtro são parâmetros de rota mesmo
-
-//Insere um novo filme no DB
-app.post('/v1/locadora/filme/', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
-
-   //Chama a função da controller para inserir o novo filme, encaminhando os dados e tipo de conteúdo
-   let filme = await controllerFilme.inserirFilme(dadosBody, contentType);
-   response.status(filme.status_code);
-   response.json(filme);
-})
-
-// Atualiza no DB o filme correspondente ao id
-app.put('/v1/locadora/filme/:id', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe o ID do filme
-   let idFilme = request.params.id;
-
-   //Recebe os dados a serem atualizado
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type'];
-
-   //Chamando função para atualizar o filme, encaminhando os dados, id e content type
-   let filme = await controllerFilme.atualizarFilme(dadosBody, idFilme, contentType);
-
-   response.status(filme.status_code);
-   response.json(filme);
-})
-
-app.delete('/v1/locadora/filme/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idFilme = request.params.id;
-
-
-   // Chama a função para excluir o filme do DB
-   let filme = await controllerFilme.excluirFilme(idFilme);
-   response.status = filme.status_code;
-   response.json(filme);
-
-})
-
-
-//-------------------------------- ROTAS GÊNERO --------------------------------//
-app.get('/v1/locadora/genero', cors(), async function (request, response) {
-   // Chama a função para listar os generos do DB
-   let genero = await controllerGenero.listarGeneros();
-   response.status = genero.status_code;
-   response.json(genero);
-})
-
-app.get('/v1/locadora/genero/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idGenero = request.params.id;
-
-   let genero = await controllerGenero.buscarGeneroId(idGenero);
-   response.status = genero.status_code;
-   response.json(genero);
-})
-
-//Insere um novo genero no DB
-app.post('/v1/locadora/genero/', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
-
-   //Chama a função da controller para inserir o novo genero, encaminhando os dados e tipo de conteúdo
-   let genero = await controllerGenero.inserirGenero(dadosBody, contentType);
-   response.status(genero.status_code);
-   response.json(genero);
-})
-
-// Atualiza no DB o genero correspondente ao id
-app.put('/v1/locadora/genero/:id', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe o ID do genero
-   let idGenero = request.params.id;
-
-   //Recebe os dados a serem atualizados
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type'];
-
-   //Chamando função para atualizar o genero, encaminhando os dados, id e content type
-   let genero = await controllerGenero.atualizarGenero(dadosBody, idGenero, contentType);
-
-   response.status(genero.status_code);
-   response.json(genero);
-})
-
-app.delete('/v1/locadora/genero/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idGenero = request.params.id;
-
-   // Chama a função para excluir o genero do DB
-   let genero = await controllerGenero.excluirGenero(idGenero);
-   response.status = genero.status_code;
-   response.json(genero);
-
-})
-
-//----------------------- ROTAS CLASSIFICAÇÃO INDICATIVA -----------------------//
-app.get('/v1/locadora/classificacao', cors(), async function (request, response) {
-   // Chama a função para listar as classificações indicativas do DB
-   let classificacao = await controllerClassificacao.listarClassificacoes();
-   response.status = classificacao.status_code;
-   response.json(classificacao);
-})
-
-app.get('/v1/locadora/classificacao/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idClassificacao = request.params.id;
-
-   let classificacao = await controllerClassificacao.buscarClassificacaoId(idClassificacao);
-   response.status = classificacao.status_code;
-   response.json(classificacao);
-})
-
-//Insere uma nova classificação no DB
-app.post('/v1/locadora/classificacao/', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
-
-   //Chama a função da controller para inserir a nova classificação, encaminhando os dados e tipo de conteúdo
-   let classificacao = await controllerClassificacao.inserirClassificacao(dadosBody, contentType);
-   response.status(classificacao.status_code);
-   response.json(classificacao);
-})
-
-// Atualiza no DB a classificação correspondente ao id
-app.put('/v1/locadora/classificacao/:id', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe o ID da classificacao
-   let idClassificacao = request.params.id;
-
-   //Recebe os dados a serem atualizados
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type'];
-
-   //Chamando função para atualizar a classificação indicativa, encaminhando os dados, id e content type
-   let classificacao = await controllerClassificacao.atualizarClassificacao(dadosBody, idClassificacao, contentType);
-
-   response.status(classificacao.status_code);
-   response.json(classificacao);
-})
-
-app.delete('/v1/locadora/classificacao/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idClassificacao = request.params.id;
-
-   // Chama a função para excluir a classificação indicativa do DB
-   let classificacao = await controllerClassificacao.excluirClassificacao(idClassificacao);
-   response.status = classificacao.status_code;
-   response.json(classificacao);
-})
-
-//----------------------------- ROTAS IDIOMA -----------------------------------//
-
-app.get('/v1/locadora/idioma', cors(), async function (request, response) {
-   // Chama a função para listar os idiomas do DB
-   let idioma = await controllerIdioma.listarIdiomas();
-   response.status = idioma.status_code;
-   response.json(idioma);
-})
-
-app.get('/v1/locadora/idioma/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idIdioma = request.params.id;
-
-   let idioma = await controllerIdioma.buscarIdiomaId(idIdioma);
-   response.status = idioma.status_code;
-   response.json(idioma);
-})
-
-//Insere um novo idioma no DB
-app.post('/v1/locadora/idioma/', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
-
-   //Chama a função da controller para inserir o novo idioma, encaminhando os dados e tipo de conteúdo
-   let idioma = await controllerIdioma.inserirIdioma(dadosBody, contentType);
-   response.status(idioma.status_code);
-   response.json(idioma);
-})
-
-// Atualiza no DB o idioma correspondente ao id
-app.put('/v1/locadora/idioma/:id', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe o ID do idioma
-   let idIdioma = request.params.id;
-
-   //Recebe os dados a serem atualizados
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type'];
-
-   //Chamando função para atualizar o idioma, encaminhando os dados, id e content type
-   let idioma = await controllerIdioma.atualizarIdioma(dadosBody, idIdioma, contentType);
-
-   response.status(idioma.status_code);
-   response.json(idioma);
-})
-
-app.delete('/v1/locadora/idioma/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idIdioma = request.params.id;
-
-   // Chama a função para excluir o idioma do DB
-   let idioma = await controllerIdioma.excluirIdioma(idIdioma);
-   response.status = idioma.status_code;
-   response.json(idioma);
-})
-
-//----------------------------- ROTAS FORMATO ----------------------------------//
-
-app.get('/v1/locadora/formato', cors(), async function (request, response) {
-   // Chama a função para listar os formatos do DB
-   let formato = await controllerFormato.listarFormatos();
-   response.status = formato.status_code;
-   response.json(formato);
-})
-
-app.get('/v1/locadora/formato/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idFormato = request.params.id;
-
-   let formato = await controllerFormato.buscarFormatoId(idFormato);
-   response.status = formato.status_code;
-   response.json(formato);
-})
-
-//Insere um novo formato no DB
-app.post('/v1/locadora/formato/', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type']
-
-   //Chama a função da controller para inserir o novo formato, encaminhando os dados e tipo de conteúdo
-   let formato = await controllerFormato.inserirFormato(dadosBody, contentType);
-   response.status(formato.status_code);
-   response.json(formato);
-})
-
-// Atualiza no DB o formato correspondente ao id
-app.put('/v1/locadora/formato/:id', cors(), bodyParserJSON, async function (request, response) {
-   //Recebe o ID do formato
-   let idFormato = request.params.id;
-
-   //Recebe os dados a serem atualizados
-   let dadosBody = request.body;
-
-   //Recebe o tipo de dados da requisição (JSON, XML, etc)
-   let contentType = request.headers['content-type'];
-
-   //Chamando função para atualizar o formato, encaminhando os dados, id e content type
-   let formato = await controllerFormato.atualizarFormato(dadosBody, idFormato, contentType);
-
-   response.status(formato.status_code);
-   response.json(formato);
-})
-
-app.delete('/v1/locadora/formato/:id', cors(), async function (request, response) {
-   //Recebe o ID encaminhado via parâmetro na requisição
-   const idFormato = request.params.id;
-
-   // Chama a função para excluir o formato do DB
-   let formato = await controllerFormato.excluirFormato(idFormato);
-   response.status = formato.status_code;
-   response.json(formato);
-})
 
 app.listen(PORT, function () {
    console.log('Hello world! \n API está operante, escutante e funcionante!')
