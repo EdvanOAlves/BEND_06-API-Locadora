@@ -45,7 +45,14 @@ CREATE TABLE tbl_genero(
 -- Formato
 CREATE TABLE tbl_formato(
     formato_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(100) NOT NULL,
+	descricao VARCHAR(250) NULL
 );
+
+INSERT INTO tbl_formato(nome, descricao)
+VALUES ('Live Action', 'Formato audiovisual que utiliza atores, cenários e objetos reais, as cenas são gravadas com câmeras e interpretadas por pessoas, podendo incluir efeitos visuais ou elementos gerados por computador para complementar o mundo real.'
+);
+
 -- -- Nacionalidade
 -- CREATE TABLE tbl_nacionalidade(
 --     nacionalidade_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

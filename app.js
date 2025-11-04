@@ -64,6 +64,7 @@ const controllerFilme = require('./controller/filme/controller_filme.js');
 const controllerGenero = require('./controller/genero/controller_genero.js');
 const controllerClassificacao = require('./controller/classificacao_indicativa/controller_classificacao_indicativa.js');
 const controllerIdioma = require('./controller/idioma/controller_idioma.js');
+const controllerFormato = require('./controller/formato_audiovisual/controller_formato.js')
 
 /**************************************************************************************************/
 // ENDPOINTS
@@ -72,8 +73,6 @@ const controllerIdioma = require('./controller/idioma/controller_idioma.js');
 
 
 //-------------------------------- ROTAS FILMES --------------------------------//
-
-
 
 app.get('/v1/locadora/filme', cors(), async function (request, response) {
    // Chama a função para listar os filmes do DB
@@ -260,6 +259,7 @@ app.delete('/v1/locadora/classificacao/:id', cors(), async function (request, re
 })
 
 //----------------------------- ROTAS IDIOMA -----------------------------------//
+
 app.get('/v1/locadora/idioma', cors(), async function (request, response) {
    // Chama a função para listar os idiomas do DB
    let idioma = await controllerIdioma.listarIdiomas();
@@ -318,9 +318,65 @@ app.delete('/v1/locadora/idioma/:id', cors(), async function (request, response)
    response.json(idioma);
 })
 
+//----------------------------- ROTAS FORMATO ----------------------------------//
 
+app.get('/v1/locadora/formato', cors(), async function (request, response) {
+   // Chama a função para listar os formatos do DB
+   let formato = await controllerFormato.listarFormatos();
+   response.status = formato.status_code;
+   response.json(formato);
+})
 
+app.get('/v1/locadora/formato/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idFormato = request.params.id;
 
+   let formato = await controllerFormato.buscarFormatoId(idFormato);
+   response.status = formato.status_code;
+   response.json(formato);
+})
+
+//Insere um novo formato no DB
+app.post('/v1/locadora/formato/', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type']
+
+   //Chama a função da controller para inserir o novo formato, encaminhando os dados e tipo de conteúdo
+   let formato = await controllerFormato.inserirFormato(dadosBody, contentType);
+   response.status(formato.status_code);
+   response.json(formato);
+})
+
+// Atualiza no DB o formato correspondente ao id
+app.put('/v1/locadora/formato/:id', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe o ID do formato
+   let idFormato = request.params.id;
+
+   //Recebe os dados a serem atualizados
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type'];
+
+   //Chamando função para atualizar o formato, encaminhando os dados, id e content type
+   let formato = await controllerFormato.atualizarFormato(dadosBody, idFormato, contentType);
+
+   response.status(formato.status_code);
+   response.json(formato);
+})
+
+app.delete('/v1/locadora/formato/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idFormato = request.params.id;
+
+   // Chama a função para excluir o formato do DB
+   let formato = await controllerFormato.excluirFormato(idFormato);
+   response.status = formato.status_code;
+   response.json(formato);
+})
 
 app.listen(PORT, function () {
    console.log('Hello world! \n API está operante, escutante e funcionante!')
