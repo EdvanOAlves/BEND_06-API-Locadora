@@ -144,9 +144,9 @@ const setUpdateFormats = async function (formato) {
     try {
         let sql = `UPDATE tbl_formato
         SET 
-            nome = '${formato.nome}'
+            nome = '${formato.nome}',
             descricao = '${formato.descricao}'
-        WHERE formato_id = '${formato.id}';`
+        WHERE formato_id = ${formato.id};`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);

@@ -63,6 +63,7 @@ const generoRoutes = require('./routes/route-genero.js');
 const classificacaoRoutes = require('./routes/route-classificacao_indicativa.js');
 const idiomaRoutes = require('./routes/route-idioma.js');
 const formatoRoutes = require('./routes/route-formato.js');
+const plataformaRoutes = require('./routes/route-plataforma_streaming.js');
 
 // Rotas Principais
 app.use(filmeRoutes);
@@ -70,6 +71,7 @@ app.use(generoRoutes);
 app.use(classificacaoRoutes);
 app.use(idiomaRoutes);
 app.use(formatoRoutes);
+app.use(plataformaRoutes);
 
 
 app.listen(PORT, function () {

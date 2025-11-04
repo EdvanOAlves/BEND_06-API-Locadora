@@ -49,18 +49,21 @@ CREATE TABLE tbl_formato(
 	descricao VARCHAR(250) NULL
 );
 
-INSERT INTO tbl_formato(nome, descricao)
-VALUES ('Live Action', 'Formato audiovisual que utiliza atores, cenários e objetos reais, as cenas são gravadas com câmeras e interpretadas por pessoas, podendo incluir efeitos visuais ou elementos gerados por computador para complementar o mundo real.'
-);
+
 
 -- -- Nacionalidade
 -- CREATE TABLE tbl_nacionalidade(
 --     nacionalidade_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 -- );
--- -- Plataforma Streaming
--- CREATE TABLE tbl_plataforma_streaming(
---     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
--- );
+
+-- Plataforma Streaming
+CREATE TABLE tbl_plataforma_streaming(
+    plataforma_streaming_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(100) NOT NULL,
+	descricao VARCHAR(250) NULL,
+	preco_assinatura DECIMAL(5,2) NOT NULL,
+	site VARCHAR(255) NULL
+);
 -- -- Tipo de Atuação
 -- CREATE TABLE tbl_tipo_atuacao(
 --     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

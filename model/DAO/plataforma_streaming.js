@@ -1,8 +1,8 @@
 /**************************************************************************************************
- * Objetivo: Arquivo responsável pelo CRUD de dados no MYSQL referente a classificacao indicativa
+ * Objetivo: Arquivo responsável pelo CRUD de dados no MYSQL referente a plataforma de Streaming
  * Autor: Edvan Alves
- * Data: 22/10/2025
- * Versão: 1.0.10.25
+ * Data: 01/11/2025
+ * Versão: 1.0.11.25
 **************************************************************************************************/
 
 /*************************************************************************************************/
@@ -54,11 +54,11 @@ const { PrismaClient } = require('../../generated/prisma');
 const prisma = new PrismaClient;
 
 
-// Retorna todas as classificações indicativas do banco de dados
-const getSelectAllContentRatings = async function () {
+// Retorna todas as plataformas de streaming do banco de dados
+const getSelectAllPlatforms = async function () {
     try {
         //script SQL
-        let sql = `SELECT * FROM tbl_classificacao_indicativa ORDER BY classificacao_id DESC`
+        let sql = `SELECT * FROM tbl_plataforma_streaming ORDER BY plataforma_streaming_id DESC`
 
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
@@ -75,11 +75,11 @@ const getSelectAllContentRatings = async function () {
 
 }
 
-// Retorna a classificação indicativa do Banco de dados, filtrando por id
-const getSelectByIdContentRatings = async function (id) {
+// Retorna a plataforma do Banco de dados, filtrando por id
+const getSelectByIdPlatform = async function (id) {
     try {
         //script SQL
-        let sql = `SELECT * FROM tbl_classificacao_indicativa  where classificacao_id =${id}`
+        let sql = `SELECT * FROM tbl_plataforma_streaming  where plataforma_streaming_id =${id}`
 
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql)
@@ -96,17 +96,17 @@ const getSelectByIdContentRatings = async function (id) {
 
 }
 
-//Retorna o Id do ultima classificação indicativa registrada
+//Retorna o Id do ultima plataforma registrada
 const getSelectLastId = async function () {
     try {
         //Script SQL
-        let sql = `SELECT classificacao_id FROM tbl_classificacao_indicativa ORDER BY classificacao_id DESC LIMIT 1`;
+        let sql = `SELECT plataforma_streaming_id FROM tbl_plataforma_streaming ORDER BY plataforma_streaming_id DESC LIMIT 1`;
 
         //Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql);
 
         if (Array.isArray(result)) {
-            return Number(result[0].classificacao_id);
+            return Number(result[0].plataforma_streaming_id);
         }
         else {
             return false;
@@ -117,11 +117,11 @@ const getSelectLastId = async function () {
     }
 }
 
-// Insere uma classificação indicativa nova no banco de dados
-const setInsertContentRatings = async function (classificacao) {
+// Insere uma Plataforma de Streaming nova no banco de dados
+const setInsertPlatform = async function (plataforma) {
     try {
-        let sql = `INSERT INTO tbl_classificacao_indicativa(nivel_classificacao, descricao)
-        VALUES('${classificacao.nivel}', '${classificacao.descricao}');`
+        let sql = `INSERT INTO tbl_plataforma_streaming(nome, descricao, preco_assinatura, site)
+        VALUES('${plataforma.nome}', '${plataforma.descricao}', '${plataforma.preco}, ${plataforma.site}');`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
@@ -139,14 +139,16 @@ const setInsertContentRatings = async function (classificacao) {
 
 }
 
-// Altera uma classificação indicativa no banco de dados
-const setUpdateContentRatings = async function (classificacao) {
+// Altera uma plataforma de streaming no banco de dados
+const setUpdatePlatform = async function (plataforma) {
     try {
-        let sql = `UPDATE tbl_classificacao_indicativa
+        let sql = `UPDATE tbl_plataforma_streaming
         SET 
-            nivel_classificacao = '${classificacao.nivel_classificacao}',
-            descricao = '${classificacao.descricao}'
-        WHERE classificao_id = ${classificacao.id};`
+            nome = '${plataforma.nome}',
+            descricao = '${plataforma.descricao}',
+            preco_assinatura = ${plataforma.preco},
+            site = ${plataforma.site}
+        WHERE plataforma_streaming_id = '${plataforma.id}';`
 
         //executeRawUnsafe -> Para executar script SQL sem retorno de valores
         let result = await prisma.$executeRawUnsafe(sql);
@@ -161,11 +163,11 @@ const setUpdateContentRatings = async function (classificacao) {
 
 }
 
-// Exclui uma classificação pelo id no banco de dados
-const setDeleteContentRatings = async function (id) {
+// Exclui uma plataforma de streaming pelo id no banco de dados
+const setDeletePlatform = async function (id) {
     try {
-        let sql = `DELETE FROM tbl_classificacao_indicativa
-        WHERE classificacao_id = ${id};`
+        let sql = `DELETE FROM tbl_plataforma_streaming
+        WHERE plataforma_streaming_id = ${id};`
 
         let result = await prisma.$executeRawUnsafe(sql);
 
@@ -180,10 +182,10 @@ const setDeleteContentRatings = async function (id) {
 }
 
 module.exports = {
-    getSelectAllContentRatings,
-    getSelectByIdContentRatings,
+    getSelectAllPlatforms,
+    getSelectByIdPlatform,
     getSelectLastId,
-    setInsertContentRatings,
-    setUpdateContentRatings,
-    setDeleteContentRatings
+    setInsertPlatform,
+    setUpdatePlatform,
+    setDeletePlatform
 }

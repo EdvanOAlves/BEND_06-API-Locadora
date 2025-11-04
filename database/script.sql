@@ -22,6 +22,10 @@ INSERT INTO tbl_filme(nome, sinopse, data_lancamento, duracao, orcamento, traile
 	'https://br.web.img2.acsta.net/c_310_420/img/c0/76/c0762c9d6396645b6335ff50962a3830.jpg');
     --Orcamento eu estipulei, não tem esse valor online
 
+-- Formato
+INSERT INTO tbl_formato(nome, descricao)
+VALUES ('Live Action', 'Formato audiovisual que utiliza atores, cenários e objetos reais, as cenas são gravadas com câmeras e interpretadas por pessoas, podendo incluir efeitos visuais ou elementos gerados por computador para complementar o mundo real.'
+);
 
 -- SELECTS (Para testes):
 
