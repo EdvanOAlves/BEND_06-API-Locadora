@@ -30,10 +30,11 @@ CREATE TABLE tbl_classificacao_indicativa(
     descricao VARCHAR(45)
 );
 
--- -- Idioma
--- CREATE TABLE tbl_idioma(
---     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
--- );
+-- Idioma
+CREATE TABLE tbl_idioma(
+    idioma_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(40) NOT NULL
+);
 
 -- Gênero
 CREATE TABLE tbl_genero(
@@ -41,10 +42,10 @@ CREATE TABLE tbl_genero(
     nome VARCHAR(20) NOT NULL
 );
 
--- -- Formato
--- CREATE TABLE tbl_formato(
---     formato_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
--- );
+-- Formato
+CREATE TABLE tbl_formato(
+    formato_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+);
 -- -- Nacionalidade
 -- CREATE TABLE tbl_nacionalidade(
 --     nacionalidade_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,

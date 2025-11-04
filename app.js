@@ -63,6 +63,7 @@ app.use((request, response, next) => {
 const controllerFilme = require('./controller/filme/controller_filme.js');
 const controllerGenero = require('./controller/genero/controller_genero.js');
 const controllerClassificacao = require('./controller/classificacao_indicativa/controller_classificacao_indicativa.js');
+const controllerIdioma = require('./controller/idioma/controller_idioma.js');
 
 /**************************************************************************************************/
 // ENDPOINTS
@@ -257,6 +258,66 @@ app.delete('/v1/locadora/classificacao/:id', cors(), async function (request, re
    response.status = classificacao.status_code;
    response.json(classificacao);
 })
+
+//----------------------------- ROTAS IDIOMA -----------------------------------//
+app.get('/v1/locadora/idioma', cors(), async function (request, response) {
+   // Chama a função para listar os idiomas do DB
+   let idioma = await controllerIdioma.listarIdiomas();
+   response.status = idioma.status_code;
+   response.json(idioma);
+})
+
+app.get('/v1/locadora/idioma/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idIdioma = request.params.id;
+
+   let idioma = await controllerIdioma.buscarIdiomaId(idIdioma);
+   response.status = idioma.status_code;
+   response.json(idioma);
+})
+
+//Insere um novo idioma no DB
+app.post('/v1/locadora/idioma/', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe os dados do body da requisição (Obrigatório no endpoint quando utilizando o bodyParser)
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type']
+
+   //Chama a função da controller para inserir o novo idioma, encaminhando os dados e tipo de conteúdo
+   let idioma = await controllerIdioma.inserirIdioma(dadosBody, contentType);
+   response.status(idioma.status_code);
+   response.json(idioma);
+})
+
+// Atualiza no DB o idioma correspondente ao id
+app.put('/v1/locadora/idioma/:id', cors(), bodyParserJSON, async function (request, response) {
+   //Recebe o ID do idioma
+   let idIdioma = request.params.id;
+
+   //Recebe os dados a serem atualizados
+   let dadosBody = request.body;
+
+   //Recebe o tipo de dados da requisição (JSON, XML, etc)
+   let contentType = request.headers['content-type'];
+
+   //Chamando função para atualizar o idioma, encaminhando os dados, id e content type
+   let idioma = await controllerIdioma.atualizarIdioma(dadosBody, idIdioma, contentType);
+
+   response.status(idioma.status_code);
+   response.json(idioma);
+})
+
+app.delete('/v1/locadora/idioma/:id', cors(), async function (request, response) {
+   //Recebe o ID encaminhado via parâmetro na requisição
+   const idIdioma = request.params.id;
+
+   // Chama a função para excluir o idioma do DB
+   let idioma = await controllerIdioma.excluirIdioma(idIdioma);
+   response.status = idioma.status_code;
+   response.json(idioma);
+})
+
 
 
 
