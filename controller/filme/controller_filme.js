@@ -129,8 +129,6 @@ const inserirFilme = async function (filme, contentType) {
         filme.genero.array.forEach(async function(genero){
             let filmeGenero = {filme_id: lastID, genero_id: genero.id}
             let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero)
-
-            
         });
 
 
