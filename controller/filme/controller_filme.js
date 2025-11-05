@@ -2,7 +2,10 @@
  * Objetivo: Arquivo responsável pela manipulação de dados entre o APP e a Model
  * Autor: Edvan Alves
  * Data: 07/10/2025
- * Versão: 1.0.10.25
+ * Versão: 1.1.10.25 (CRUD básico do filme, sem relações com outras tabelas)
+ * Autor: Edvan Alves | 07/10/2025
+ * Versão: 1.1.11.25 (CRUD do filme com relacionamento com a tabela Gênero)
+ * Autor: Edvan Alves | 05/11/2025
  **************************************************************************************************/
 
 /**************************************************************************************************/
@@ -18,6 +21,9 @@ const filmeDAO = require('../../model/DAO/filme.js');
 
 //Import do arquivo de mensagens
 const DEFAULT_MESSAGES = require('../modulo/config_messages.js');
+
+// Import da Controller de relação entre Filme e Gênero
+const controllerFilmeGenero = require('./controller_filme_genero.js')
 
 // Retorna uma lista com todos os filmes
 const listarFilmes = async function () {
@@ -119,6 +125,17 @@ const inserirFilme = async function (filme, contentType) {
         //   retornar o id para o usuário, tinha que ser uma mensagem diferente
         //   Ou... Deletar o ultimo registro para o usuário cadastrar de novo?
 
+        // Processar a inserção dos dados na tabela de relação entre filme e genero
+        filme.genero.array.forEach(async function(genero){
+            let filmeGenero = {filme_id: lastID, genero_id: genero.id}
+            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero)
+
+            
+        });
+
+
+
+        // Adicionando o id do filme no JSON
         filme.id = lastID
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
