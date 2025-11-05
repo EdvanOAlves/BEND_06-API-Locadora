@@ -72,3 +72,18 @@ CREATE TABLE tbl_plataforma_streaming(
 -- CREATE TABLE tbl_sexo(
 --     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 -- );
+
+------------------------------
+-- Entidades-Relacionamento
+------------------------------
+
+CREATE TABLE tbl_filme_genero(
+	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	filme_id INT NOT NULL,
+	genero_id INT NOT NULL,
+
+	CONSTRAINT FK_FILME_FILME_GENERO
+	FOREIGN KEY (filme_id) REFERENCES tbl_filme(filme_id),
+	CONSTRAINT FK_GENERO_FILME_GENERO
+	FOREIGN KEY (genero_id) REFERENCES tbl_genero(genero_id)
+);
