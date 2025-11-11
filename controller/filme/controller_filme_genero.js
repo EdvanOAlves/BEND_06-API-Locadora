@@ -88,7 +88,6 @@ const listarGenerosIdFilme = async function (idFilme) {
 
         //Executando busca por id
         let resultFilmesGeneros = await filmeGeneroDAO.getSelectGenresByIdMovies(Number(idFilme));
-
         //--------------Verificações da busca-----------//
         //Caso houve um erro na execução do model
         if (!resultFilmesGeneros) {

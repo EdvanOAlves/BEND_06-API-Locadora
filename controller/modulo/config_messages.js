@@ -76,6 +76,18 @@ const ERROR_INTERNAL_SERVER_MODEL = {
     message: 'Não foi possível processar a requisição devido a erros internos no servidor (Model).'
 }
 
+const ERROR_FETCH_LAST_ID = {
+    status: false,
+    status_code: 500,
+    message: "A requisição do item principal foi processada, porém houveram problemas na consulta do id do item registrado"
+}
+
+const ERROR_RELATION_INSERTION ={
+    status: false,
+    status_code: 500,
+    message: "A requisição do item principal foi processada, porém houveram problemas ao inserir dados na tabela de relacionamento."
+}
+
 module.exports = {
     DEFAULT_HEADER,
     SUCCESS_REQUEST,
@@ -86,6 +98,8 @@ module.exports = {
     ERROR_NOT_FOUND,
     ERROR_CONTENT_TYPE,
     ERROR_INTERNAL_SERVER_CONTROLLER,
-    ERROR_INTERNAL_SERVER_MODEL
+    ERROR_INTERNAL_SERVER_MODEL,
+    ERROR_FETCH_LAST_ID,
+    ERROR_RELATION_INSERTION
 
 }
