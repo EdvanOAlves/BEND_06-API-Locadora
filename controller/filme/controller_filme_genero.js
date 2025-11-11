@@ -170,7 +170,7 @@ const inserirFilmeGenero = async function (filmeGenero, contentType) {
         }
 
         //Chama a função para inserir o registro no DB
-        let resultFilmesGeneros = await filmeGeneroDAO.setInsertContentRatings(filmeGenero);
+        let resultFilmesGeneros = await filmeGeneroDAO.setInsertMoviesGenres(filmeGenero);
         if (!resultFilmesGeneros) {
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
         }

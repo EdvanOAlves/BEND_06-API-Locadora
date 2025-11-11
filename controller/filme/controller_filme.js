@@ -126,9 +126,12 @@ const inserirFilme = async function (filme, contentType) {
         //   Ou... Deletar o ultimo registro para o usuário cadastrar de novo?
 
         // Processar a inserção dos dados na tabela de relação entre filme e genero
-        filme.genero.array.forEach(async function(genero){
+        filme.genero.forEach(async function(genero){
+            //Cria JSON associado com o id do filme e id do gênero
             let filmeGenero = {filme_id: lastID, genero_id: genero.id}
-            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero)
+
+            //Encaminhando o JSON com os ids do filme e gênero para a controllerFilmeGenero 
+            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType);
         });
 
 
