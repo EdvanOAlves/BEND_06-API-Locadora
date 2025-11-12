@@ -88,6 +88,12 @@ const ERROR_RELATION_INSERTION ={
     message: "A requisição do item principal foi processada, porém houveram problemas ao inserir dados na tabela de relacionamento."
 }
 
+const ERROR_RELATION_DELETION = {
+    status: false,
+    status_code:500,
+    message: "Não foi possível processar a requisição devido a erros na limpeza de gêneros(controller)"
+}
+
 module.exports = {
     DEFAULT_HEADER,
     SUCCESS_REQUEST,
@@ -100,6 +106,7 @@ module.exports = {
     ERROR_INTERNAL_SERVER_CONTROLLER,
     ERROR_INTERNAL_SERVER_MODEL,
     ERROR_FETCH_LAST_ID,
-    ERROR_RELATION_INSERTION
+    ERROR_RELATION_INSERTION,
+    ERROR_RELATION_DELETION
 
 }

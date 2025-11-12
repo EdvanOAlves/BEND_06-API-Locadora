@@ -190,6 +190,27 @@ const setDeleteMoviesGenres = async function (id) {
     }
 }
 
+// Exclui todos os registros de relacionamento entre filme e gênero associados com o id de um filme
+const setDeleteMovieGenresByMovieId = async function(filmeId){
+    try {
+        let sql = `DELETE FROM tbl_filme_genero
+        WHERE filme_id = ${filmeId};`
+
+        let result = await prisma.$executeRawUnsafe(sql);
+
+        if (result){
+            return true;
+        }
+        else
+            return false;
+        
+    } catch (error) {
+        console.log(error);
+        return false
+        
+    }
+}
+
 module.exports = {
     getSelectAllMovieGenres,
     getSelectByIdMovieGenres,
@@ -198,5 +219,6 @@ module.exports = {
     getSelectLastId,
     setInsertMoviesGenres,
     setUpdateMoviesGenres,
-    setDeleteMoviesGenres
+    setDeleteMoviesGenres,
+    setDeleteMovieGenresByMovieId
 }
