@@ -1,0 +1,860 @@
+openapi: 3.0.3
+info:
+  title: Projeto Locadora Senai - Edvan Alves
+  description: |-
+   API para registro e consulta de filmes
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: edvan.aoliveira324@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://github.com/EdvanOAlves/BEND_06-API-Locadora
+paths:
+  /v1/locadora/filme:
+    get:
+      tags:
+        - filme
+      summary: Lista todos os filmes
+      description: Listagem de todos os registros de filmes no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Filme'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - filme
+      summary: Cadastro de filme
+      description: Adiciona um novo registro de filme no banco de dados
+      requestBody:
+        description: JSON contendo os dados do filme a ser registrado no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/filme/{id}:
+    get:
+      tags:
+        - filme
+      summary: Busca um filme pelo ID
+      description: Realiza uma busca no BD por um registro de filme com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Filme'          
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - filme
+      summary: Atualiza um filme existente
+      description: Atualiza os dados do registro de um filme no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser alterado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza um filme existente
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Filme'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - filme
+      summary: Deleta o filme
+      description: Exclui o registro de um filme correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente ao filme
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+
+  /v1/locadora/formato:
+    get:
+      tags:
+        - formato
+      summary: Lista todos os formatos
+      description: Listagem de todos os registros de formatos audiovisuais no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Formato'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - formato
+      summary: Cadastro de formato
+      description: Adiciona um novo registro de formato audiovisual no banco de dados
+      requestBody:
+        description: JSON contendo os dados do formato a ser registrado no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Formato'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/formato/{id}:
+    get:
+      tags:
+        - formato
+      summary: Busca um formato pelo ID
+      description: Realiza uma busca no BD por um registro de formato audiovisual com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Formato'
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - formato
+      summary: Atualiza um formato existente
+      description: Atualiza os dados do registro de um formato audiovisual no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser alterado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza um formato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Formato'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - formato
+      summary: Deleta o formato
+      description: Exclui o registro de um formato audiovisual correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente ao formato
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+  /v1/locadora/genero:
+    get:
+      tags:
+        - genero
+      summary: Lista todos os generos
+      description: Listagem de todos os registros de generos no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Genero'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - genero
+      summary: Cadastro de genero
+      description: Adiciona um novo registro de genero no banco de dados
+      requestBody:
+        description: JSON contendo os dados do genero a ser registrado no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/genero/{id}:
+    get:
+      tags:
+        - genero
+      summary: Busca um genero pelo ID
+      description: Realiza uma busca no BD por um registro de idioma com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Formato'
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - genero
+      summary: Atualiza um genero existente
+      description: Atualiza os dados do registro de um genero no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser alterado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza um formato
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genero'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - genero
+      summary: Deleta o genero
+      description: Exclui o registro de um genero correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente ao genero
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+
+  /v1/locadora/idioma:
+    get:
+      tags:
+        - idioma
+      summary: Lista todos os idiomas
+      description: Listagem de todos os registros de idiomas no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Idioma'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - idioma
+      summary: Cadastro de Idioma
+      description: Adiciona um novo registro de idioma no banco de dados
+      requestBody:
+        description: JSON contendo os dados do idioma a ser registrado no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/idioma/{id}:
+    get:
+      tags:
+        - idioma
+      summary: Busca um idioma pelo ID
+      description: Realiza uma busca no BD por um registro de idioma com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Idioma'
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - idioma
+      summary: Atualiza um idioma existente
+      description: Atualiza os dados do registro de um idioma no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id do idioma a ser alterado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza um idioma
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Idioma'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - idioma
+      summary: Deleta o idioma
+      description: Exclui o registro de um idioma correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente ao idioma
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/plataforma:
+    get:
+      tags:
+        - plataforma
+      summary: Lista todas as plataformas de streaming
+      description: Listagem de todos os registros de plataformas de streaming no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plataforma'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - plataforma
+      summary: Cadastro de Plataforma de Streaming
+      description: Adiciona um novo registro de plataforma de streaming no banco de dados
+      requestBody:
+        description: JSON contendo os dados da plataforma a ser registrada no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plataforma'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/plataforma/{id}:
+    get:
+      tags:
+        - plataforma
+      summary: Busca uma plataforma pelo ID
+      description: Realiza uma busca no BD por um registro de plataforma com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plataforma'
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - plataforma
+      summary: Atualiza uma plataforma existente
+      description: Atualiza os dados do registro de uma plataforma de streaming no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id da plataforma a ser alterada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza uma plataforma
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plataforma'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - plataforma
+      summary: Deleta a plataforma
+      description: Exclui o registro de uma plataforma de streaming correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente a plataforma
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/classificacao:
+    get:
+      tags:
+        - classificacao
+      summary: Lista todas as classificações indicativas
+      description: Listagem de todos os registros de classificações indicativas de streaming no banco de dados
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classificacao'          
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+        - classificacao
+      summary: Cadastro de Classificação
+      description: Adiciona um novo registro de classificação indicativa no banco de dados
+      requestBody:
+        description: JSON contendo os dados da classificação a ser registrada no sistema
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classificacao'
+        required: true
+      responses:
+        '201':
+          description: Item Successfully Created
+        '400':
+          description: Invalid Input
+        '415':
+          description: Unsuported Media Type
+        '500':
+          description: Internal Server Error
+          
+  /v1/locadora/classificacao/{id}:
+    get:
+      tags:
+        - classificacao
+      summary: Busca uma classificação pelo ID
+      description: Realiza uma busca no BD por um registro de classificação indicativa com id igual ao solicitado
+      parameters:
+        - name: id
+          in: path
+          description: Id do registro a ser consultado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classificacao'
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500': 
+          description: Internal Server Error
+    put:
+      tags:
+        - classificacao
+      summary: Atualiza uma classificação existente
+      description: Atualiza os dados do registro de uma classificação indicativa no banco de dados correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id da classificação a ser alterada
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: atualiza uma classificação
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Classificacao'
+        required: true
+      responses:
+        '200':
+          description: Successful Operation
+        '404':
+          description: Not Found
+        '415':
+          description: Unsuported media type
+        '500':
+          description: Internal Server Error 
+    delete:
+      tags:
+        - classificacao
+      summary: Deleta a classificacao
+      description: Exclui o registro de uma classificação indicativa correspondente ao Id
+      parameters:
+        - name: id
+          in: path
+          description: Id correspondente a classificação
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful Operation
+        '400':
+          description: Invalid Input
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          
+components:
+  schemas:
+    Filme:
+      required:
+      - nome
+      - duracao
+      - capa
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        sinopse:
+          type: string
+        data_lancamento:
+          type: string
+          format: date
+        duracao:
+          type: string
+          format: date-time
+        orcamento:
+          type: number
+          format: float
+        trailer:
+          type: string
+        capa:
+          type: string
+    Formato:
+      required:
+      - nome
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+    Genero:
+      required:
+      - nome
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+    Idioma:
+      required:
+        - nome
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+    Plataforma:
+      required:
+        - nome
+        - preco
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number
+          format: float
+        site:
+          type: string
+    Classificacao:
+      required:
+        - nivel
+        - descricao
+      type: object
+      properties:
+        id:
+          type: integer
+        nivel:
+          type: string
+        descricao:
+          type: string
+  requestBodies:
+    Filme:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Filme'
+    Formato:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Filme'
+    Genero:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Genero'
+    Idioma:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Idioma'
+    Plataforma:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Plataforma'
+    Classificacao:
+      description: Objeto que deve ser enviado no Body das requisicoes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Classificacao'
+    

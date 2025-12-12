@@ -93,10 +93,29 @@ CREATE TABLE tbl_plataforma_streaming(
 -- CREATE TABLE tbl_tipo_atuacao(
 --     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
 -- );
--- -- Sexo
--- CREATE TABLE tbl_sexo(
---     _id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
--- );
+-- Sexo
+CREATE TABLE tbl_sexo(
+    sexo_id VARCHAR(1) PRIMARY KEY NOT NULL,
+	extenso VARCHAR(20) NOT NULL
+);
+
+-- Profissional
+CREATE TABLE tbl_profissional(
+	profissional_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(100) NOT NULL,
+	biografia TEXT NULL,
+	foto VARCHAR(255) NULL,
+	data_nascimento DATE NOT NULL,
+	data_falecimento DATE NULL,
+	-- pais_origem_id INT NOT NULL,
+	sexo_id VARCHAR(1) NOT NULL,
+
+
+	-- CONSTRAINT FK_PAIS_ORIGEM_PROFISSIONAL
+	-- FOREIGN KEY (pais_origem_id) REFERENCES tbl_pais(pais_id),
+	CONSTRAINT FK_SEXO_PROFISSIONAL
+	FOREIGN KEY (sexo_id) REFERENCES tbl_sexo(sexo_id)
+)
 
 ------------------------------
 -- Entidades-Relacionamento
@@ -112,3 +131,16 @@ CREATE TABLE tbl_filme_genero(
 	CONSTRAINT FK_GENERO_FILME_GENERO
 	FOREIGN KEY (genero_id) REFERENCES tbl_genero(genero_id)
 );
+
+CREATE TABLE tbl_personagem(
+	personagem_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(100) NOT NULL,
+	papel VARCHAR(40) NOT NULL,
+	profissional_id INT NOT NULL,
+	filme_id INT NOT NULL,
+
+	CONSTRAINT FK_PROFISSIONAL_PERSONAGEM
+	FOREIGN KEY (profissional_id) REFERENCES tbl_profissional(profissional_id),
+	CONSTRAINT FK_FILME_PERSONAGEM
+	FOREIGN KEY (filme_id) REFERENCES tbl_filme(filme_id)
+)
