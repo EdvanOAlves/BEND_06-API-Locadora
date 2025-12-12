@@ -27,7 +27,8 @@ INSERT INTO tbl_formato(nome, descricao)
 VALUES ('Live Action', 'Formato audiovisual que utiliza atores, cenários e objetos reais, as cenas são gravadas com câmeras e interpretadas por pessoas, podendo incluir efeitos visuais ou elementos gerados por computador para complementar o mundo real.'
 );
 
--- SELECTS (Para testes):
 
-SELECT * FROM tbl_filme;
-SELECT nome, data_lancamento, duracao, orcamento, trailer, capa;
+-- Masculino e feminino
+INSERT INTO tbl_sexo(sexo_id, extenso)
+VALUES ('M', 'Masculino'),
+('F', 'Feminino');
