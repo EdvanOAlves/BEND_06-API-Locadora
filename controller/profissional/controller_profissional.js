@@ -97,6 +97,7 @@ const inserirProfissional = async function (profissional, contentType) {
         if (String(contentType).toUpperCase() != 'APPLICATION/JSON')
             return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
 
+        profissional.sexo_id = profissional.sexo_id.toUpperCase()
         // Chama a função de validar os dados do profissional
         let falha = await verificarFalhas(profissional)
         if (falha) {
@@ -152,6 +153,7 @@ const atualizarProfissional = async function (profissional, id, contentType) {
             return MESSAGES.ERROR_CONTENT_TYPE;                                 //415
 
         // Chama a função de validar os dados do profissional
+        profissional.sexo_id = profissional.sexo_id.toUpperCase()
         let falha = await verificarFalhas(profissional)
         if (falha.length) {
             return falha                                                        //400 referente a dados de input
@@ -217,43 +219,45 @@ const excluirProfissional = async function (id) {
     }
 }
 
+
 // Função reutilizável para validação de dados de cadastro e atualização do profissional
 const verificarFalhas = async function (profissional) {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
+    profissional.sexo_id = profissional.sexo_id.toUpperCase()
 
     let invalidInputs = [];
 
     if (isNaN(profissional.id) || profissional.id == '' || profissional.id == null || profissional.id == undefined || profissional.id <= 0) {
         invalidInputs.push('Id de usuario');
-        //Sexo_id vai ser "M" "F"
-    if (!isNaN(profissional.sexo_id) || profissional.sexo_id == '' || profissional.sexo_id == null || profissional.sexo_id == undefined || profissional.sexo_id.length < 1) {
-        invalidInputs.push('Id de usuario');
-    if (profissional.nome == '' || profissional.nome == undefined || profissional.nome == null || profissional.nome.length > 100)
-        invalidInputs.push('Nome');
-    if (profissional.biografia == undefined)
-        invalidInputs.push('biografia');
-    if (profissional.foto == '' || profissional.foto == undefined || profissional.foto == null || profissional.foto.length > 255)
-        invalidInputs.push('foto');
-    if (profissional.data_nascimento == undefined || profissional.data_nascimento != 10)
-        invalidInputs.push('Data de Nascimento');
-    if (profissional.data_falecimento == undefined)
-        invalidInputs.push('Data de Falecimento');
+        if (!isNaN(profissional.sexo_id) || profissional.sexo_id == '' || profissional.sexo_id == null || profissional.sexo_id == undefined || profissional.sexo_id.length < 1) {
+            if (profissional.sexo_id != M || profissional.sexo_id != F) {
+                invalidInputs.push('Id de usuario');
+                if (profissional.nome == '' || profissional.nome == undefined || profissional.nome == null || profissional.nome.length > 100)
+                    invalidInputs.push('Nome');
+                if (profissional.biografia == undefined)
+                    invalidInputs.push('biografia');
+                if (profissional.foto == '' || profissional.foto == undefined || profissional.foto == null || profissional.foto.length > 255)
+                    invalidInputs.push('foto');
+                if (profissional.data_nascimento == undefined || profissional.data_nascimento != 10)
+                    invalidInputs.push('Data de Nascimento');
+                if (profissional.data_falecimento == undefined)
+                    invalidInputs.push('Data de Falecimento');
 
-    //Retornando em caso de campos invalidos
-    if (invalidInputs.length) {
-        MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
-        return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400
-    }
-    else
-        return false;
+                //Retornando em caso de campos invalidos
+                if (invalidInputs.length) {
+                    MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
+                    return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400
+                }
+                else
+                    return false;
 
-}
+            }
 
-module.exports = {
-    listarProfissionais,
-    buscarProfissionalId,
-    inserirProfissional,
-    atualizarProfissional,
-    excluirProfissional
-}
+            module.exports = {
+                listarProfissionais,
+                buscarProfissionalId,
+                inserirProfissional,
+                atualizarProfissional,
+                excluirProfissional
+            }

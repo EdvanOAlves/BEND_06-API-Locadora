@@ -271,37 +271,6 @@ const excluirFilmeGenero = async function (id) {
     }
 }
 
-// Para deletar os relacionamentos de gênero correspondentes ao idFilme
-const excluirFilmesGenerosIdFilme = async function (filmeId){
-    //Criando um novo objeto para as mensagens
-    let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
-    try {
-        // //Verificando existencia do filmexGenero
-        // let validarId = await buscarFilmeGeneroId(filmeId);
-
-        // //Caso houve um erro na execução do model
-        // if (validarId.status_code != 200) {
-        //     return validarId                                                    // 400 referente a id / 404 / 500 
-        // }
-        //TODO: Deve precisar de uma tratativa para 404, filmes sem genero cadastrados
-
-
-        
-        let resultFilmesGeneros = await filmeGeneroDAO.setDeleteMovieGenresByMovieId(filmeId);
-        if (resultFilmesGeneros) {
-            MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_DELETED_ITEM.status;
-            MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_DELETED_ITEM.status_code;
-            MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_DELETED_ITEM.message;
-
-            return MESSAGES.DEFAULT_HEADER                                          //200
-        }
-        else
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                            //500
-
-    } catch (error) {
-        return MESSAGES.ERROR_RELATION_DELETION;                                    //500 
-    }
-}
 
 // Função reutilizável para validação de dados de cadastro e atualização do registro
 const verificarFalhas = async function (filmeGenero) {
@@ -331,6 +300,5 @@ module.exports = {
     listarFilmesIdGenero,
     inserirFilmeGenero,
     atualizarFilmeGenero,
-    excluirFilmeGenero,
-    excluirFilmesGenerosIdFilme
+    excluirFilmeGenero
 }
