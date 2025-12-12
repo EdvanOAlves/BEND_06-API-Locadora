@@ -64,6 +64,9 @@ const classificacaoRoutes = require('./routes/route-classificacao_indicativa.js'
 const idiomaRoutes = require('./routes/route-idioma.js');
 const formatoRoutes = require('./routes/route-formato.js');
 const plataformaRoutes = require('./routes/route-plataforma_streaming.js');
+const filmeGeneroRoutes = require('./routes/route-filme_genero.js')
+const profissionalRoutes = require('./routes/route-profissional.js')
+const personagemRoutes = require('./routes/route-personagem.js')
 
 // Rotas Principais
 app.use(filmeRoutes);
@@ -72,6 +75,9 @@ app.use(classificacaoRoutes);
 app.use(idiomaRoutes);
 app.use(formatoRoutes);
 app.use(plataformaRoutes);
+app.use(filmeGeneroRoutes);
+app.use(profissionalRoutes);
+app.use(personagemRoutes);
 
 
 app.listen(PORT, function () {
