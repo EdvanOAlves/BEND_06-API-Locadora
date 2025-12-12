@@ -30,7 +30,7 @@ const listarFilmes = async function () {
     //Criando um novo objeto para as mensagens
     let MESSAGES = JSON.parse(JSON.stringify(DEFAULT_MESSAGES));
     try {
-        // Chama a função do DAO para retornar a lista de Filmes
+        // Chama a função do DAO para retornar a lista de Filmes //
         let resultFilmes = await filmeDAO.getSelectAllMovies();
 
         if (!resultFilmes) {
@@ -39,6 +39,17 @@ const listarFilmes = async function () {
         if (resultFilmes.length < 0) {
             return MESSAGES.ERROR_NOT_FOUND;                    //404
         }
+        //------------------------------------------------------//
+
+        //-----Busca de generos---------//
+        for (filme of resultFilmes) {
+            const resultDadosGeneros = await controllerFilmeGenero.listarGenerosIdFilme(filme.filme_id)
+            if (resultDadosGeneros.status_code == 200)
+                filme.genero = resultDadosGeneros;
+            else
+                filme.genero = null;
+        }
+        //-----------------------------//
 
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status; //Isso aqui é genial
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
@@ -77,6 +88,18 @@ const buscarFilmeId = async function (id) {
 
         //---------------------------------------------//
 
+        //---Adicionar no JSON dados do(s) gênero(s)---//
+
+        //Pesquisando no banco de dados todos os generos associados ao filme
+        let resultDadosGeneros = await controllerFilmeGenero.listarGenerosIdFilme(resultFilmes[0].filme_id);
+
+        //Inserindo no registro do filme 
+        if (resultDadosGeneros.status_code == 200)
+            resultFilmes[0].genero = resultDadosGeneros.items.filme_genero;
+        else
+            resultFilmes[0].genero = null;
+        //--------------------------------------------//
+
         //Montagem do Message
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_REQUEST.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_REQUEST.status_code;
@@ -85,6 +108,7 @@ const buscarFilmeId = async function (id) {
         return MESSAGES.DEFAULT_HEADER                                          //200
 
     } catch (error) {
+        console.log(error)
         return MESSAGES.ERROR_INTERNAL_SERVER_CONTROLLER;                       //500
 
     }
@@ -115,26 +139,41 @@ const inserirFilme = async function (filme, contentType) {
         //Preparo para retorno de caso 200
         //Chama a função para receber o ID gerado no BD
         let lastID = await filmeDAO.getSelectLastId();
-        console.log(lastID)
 
         if (!lastID)
-            return MESSAGES.ERROR_INTERNAL_SERVER_MODEL                         //500
-        // Ainda acho que poderia ter uma tratativa melhor para isso
-        //
-        // - Se caiu nesse cenário o insert funcionou, ele só não conseguiu
-        //   retornar o id para o usuário, tinha que ser uma mensagem diferente
-        //   Ou... Deletar o ultimo registro para o usuário cadastrar de novo?
+            return MESSAGES.ERROR_FETCH_LAST_ID                                 //500 Problema na consulta de id criado, com cadastro de item principal realizado
 
         // Processar a inserção dos dados na tabela de relação entre filme e genero
-        filme.genero.array.forEach(async function(genero){
-            let filmeGenero = {filme_id: lastID, genero_id: genero.id}
-            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero)
-        });
+        for (genero of filme.genero) {
+            //o For each não lida direito com async quando a função mãe(inserirFilme nesse caso) é uma função async
+            //for of resolve os problemas que o forEach causa
+
+            //Cria JSON associado com o id do filme e id do gênero
+            let filmeGenero = { filme_id: lastID, genero_id: genero.id }
+
+            //Encaminhando o JSON com os ids do filme e gênero para a controllerFilmeGenero 
+            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType);
+            if (resultsFilmeGenero.status_code != 201) {
+                return MESSAGES.ERROR_RELATION_INSERTION                        // 500 Problema na tabela de relação, com cadastro de item principal realizado
+            }
+        };
 
 
 
         // Adicionando o id do filme no JSON
         filme.id = lastID
+
+        //Adicionar no JSON dados do(s) gênero(s)
+        //Apagando atributo genero que utilizamos (ele só tinha o id)
+        delete filme.genero;
+
+        //Pesquisou no banco de dados todos os generos associados ao filme
+        let resultDadosGeneros = await controllerFilmeGenero.listarGenerosIdFilme(lastID);
+        //Inserindo no registro do filme 
+        filme.genero = resultDadosGeneros.items.filme_genero;
+        //
+
+
         MESSAGES.DEFAULT_HEADER.status = MESSAGES.SUCCESS_CREATED_ITEM.status;
         MESSAGES.DEFAULT_HEADER.status_code = MESSAGES.SUCCESS_CREATED_ITEM.status_code;
         MESSAGES.DEFAULT_HEADER.message = MESSAGES.SUCCESS_CREATED_ITEM.message;
@@ -172,8 +211,31 @@ const atualizarFilme = async function (filme, id, contentType) {
         if (validarId.status_code != 200) {
             return validarId                                                    // 400 referente a id / 404 / 500 
         }
-        /*-----------------------------------------------------------------------------*/
 
+        // Apagando registros anteriores de filmes generos
+        const resultDeleteFilmeGeneros = await controllerFilmeGenero.excluirFilmesGenerosIdFilme(id); 
+
+        if (!resultDeleteFilmeGeneros.status_code == 500 || resultDeleteFilmeGeneros.status_code == 400){
+            return resultDeleteFilmeGeneros                                     // 400 / 500 
+        }
+
+
+        // Processar a inserção dos dados na tabela de relação entre filme e genero
+        for (genero of filme.genero) {
+            //o For each não lida direito com async quando a função mãe(inserirFilme nesse caso) é uma função async
+            //for of resolve os problemas que o forEach causa
+
+            //Cria JSON associado com o id do filme e id do gênero
+            let filmeGenero = { filme_id: id, genero_id: genero.genero_id }
+
+            //Encaminhando o JSON com os ids do filme e gênero para a controllerFilmeGenero 
+            let resultsFilmeGenero = await controllerFilmeGenero.inserirFilmeGenero(filmeGenero, contentType);
+            if (resultsFilmeGenero.status_code != 201) {
+                return MESSAGES.ERROR_RELATION_INSERTION                        // 500 Problema na tabela de relação, com cadastro de item principal realizado
+            }
+        };
+
+        /*-----------------------------------------------------------------------------*/
         //Adiciona o id do parâmetro no JSON de dados a ser encaminhado ao DAO
         filme.id = Number(id);
 
@@ -187,8 +249,9 @@ const atualizarFilme = async function (filme, id, contentType) {
             //TODO: É interessante retornar os dados registrados do filme, usando o get do DB
 
             return MESSAGES.DEFAULT_HEADER                                      //200
-        } else
+        } else{
             return MESSAGES.ERROR_INTERNAL_SERVER_MODEL;                        //500
+        }
 
     } catch (error) {
         console.log(error);
@@ -209,6 +272,9 @@ const excluirFilme = async function (id) {
         if (validarId.status_code != 200) {
             return validarId                                                    // 400 referente a id / 404 / 500 
         }
+
+        // const generos = 
+        // let resultFilmesGeneros = await 
 
         let resultFilmes = await filmeDAO.setDeleteMovies(id);
         if (resultFilmes) {

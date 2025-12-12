@@ -59,7 +59,7 @@ const getSelectGenresByIdMovies = async function(filme_id){
     try {
         //Script SQL
         let sql = 
-        `SELECT tbl_genero.id, tbl_genero.nome
+        `SELECT tbl_genero.genero_id, tbl_genero.nome
             FROM tbl_filme
                 INNER JOIN tbl_filme_genero
                     ON tbl_filme.filme_id = tbl_filme_genero.filme_id
@@ -69,14 +69,13 @@ const getSelectGenresByIdMovies = async function(filme_id){
 
         // Encaminha o script SQL para o BD
         let result = await prisma.$queryRawUnsafe(sql);
-
         if (Array.isArray(result))
             return result;
         else
             return false;
     }
     catch (error){
-        // console.log(error);
+        console.log(error);
         return false;
     }
 }
@@ -191,6 +190,27 @@ const setDeleteMoviesGenres = async function (id) {
     }
 }
 
+// Exclui todos os registros de relacionamento entre filme e gênero associados com o id de um filme
+const setDeleteMovieGenresByMovieId = async function(filmeId){
+    try {
+        let sql = `DELETE FROM tbl_filme_genero
+        WHERE filme_id = ${filmeId};`
+
+        let result = await prisma.$executeRawUnsafe(sql);
+
+        if (result){
+            return true;
+        }
+        else
+            return false;
+        
+    } catch (error) {
+        console.log(error);
+        return false
+        
+    }
+}
+
 module.exports = {
     getSelectAllMovieGenres,
     getSelectByIdMovieGenres,
@@ -199,5 +219,6 @@ module.exports = {
     getSelectLastId,
     setInsertMoviesGenres,
     setUpdateMoviesGenres,
-    setDeleteMoviesGenres
+    setDeleteMoviesGenres,
+    setDeleteMovieGenresByMovieId
 }

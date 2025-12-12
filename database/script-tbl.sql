@@ -18,6 +18,31 @@ CREATE TABLE tbl_filme(
 	capa VARCHAR(200) NOT NULL
 );
 
+-- Profissional
+CREATE TABLE tbl_profissional(
+	profissional_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	nome VARCHAR(100),
+	biografia TEXT NULL,
+	foto VARCHAR(255) NULL,
+	data_nascimento DATE NOT NULL,
+	data_falecimento DATE NULL
+
+	-- pais_origem INT
+	-- sexo_id INT
+	-- CONSTRAINT fk_pais_profissional;
+	-- FOREIGN KEY (pais_origem) REFERENCES 
+	-- CONSTRAINT fk_sexo_profissional;
+	-- FOREIGN KEY () REFERENCES tbl_sexo(sexo_id),
+)
+
+CREATE TABLE tbl_cargo (
+	cargo_id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	--TODO: finalizar
+)
+CREATE TABLE tbl_atuacao
+CREATE TABLE tbl_personagem
+
+
 ------------------------------
 -- Tabelas Independentes
 ------------------------------
