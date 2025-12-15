@@ -65,7 +65,7 @@ const buscarPlataformaId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultPlataforma <= 0) {
+        if (resultPlataforma.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

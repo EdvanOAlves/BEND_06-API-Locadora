@@ -57,7 +57,7 @@ const buscarPersonagemId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultPersonagens <= 0) {
+        if (resultPersonagens.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -96,7 +96,7 @@ const listarfilmesIdProfissional = async function (idProfissional) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultPersonagens <= 0) {
+        if (resultPersonagens.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -134,7 +134,7 @@ const listarProfissionaisIdFilme = async function (idFilme) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultPersonagens <= 0) {
+        if (resultPersonagens.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

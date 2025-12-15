@@ -65,7 +65,7 @@ const buscarGeneroId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultGeneros <= 0) {
+        if (resultGeneros.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

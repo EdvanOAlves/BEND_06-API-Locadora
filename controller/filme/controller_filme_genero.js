@@ -57,7 +57,7 @@ const buscarFilmeGeneroId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFilmesGeneros <= 0) {
+        if (resultFilmesGeneros.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -95,7 +95,7 @@ const listarGenerosIdFilme = async function (idFilme) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFilmesGeneros <= 0) {
+        if (resultFilmesGeneros.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -133,7 +133,7 @@ const listarFilmesIdGenero = async function (idGenero) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFilmesGeneros <= 0) {
+        if (resultFilmesGeneros.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

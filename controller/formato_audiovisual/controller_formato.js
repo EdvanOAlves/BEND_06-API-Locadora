@@ -65,7 +65,7 @@ const buscarFormatoId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFormato <= 0) {
+        if (resultFormato.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

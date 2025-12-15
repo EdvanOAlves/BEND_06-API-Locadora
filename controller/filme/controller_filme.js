@@ -82,7 +82,7 @@ const buscarFilmeId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultFilmes <= 0) {
+        if (resultFilmes.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

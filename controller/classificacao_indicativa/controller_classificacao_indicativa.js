@@ -65,7 +65,7 @@ const buscarClassificacaoId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultClassificacao <= 0) {
+        if (resultClassificacao.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 

@@ -68,7 +68,7 @@ const buscarProfissionalId = async function (id) {
         }
 
         //Caso não exista um item com id correspondente ao inserido
-        if (resultProfissionais <= 0) {
+        if (resultProfissionais.length <= 0) {
             return MESSAGES.ERROR_NOT_FOUND;                                    //404
         }
 
@@ -228,36 +228,35 @@ const verificarFalhas = async function (profissional) {
 
     let invalidInputs = [];
 
-    if (isNaN(profissional.id) || profissional.id == '' || profissional.id == null || profissional.id == undefined || profissional.id <= 0) {
-        invalidInputs.push('Id de usuario');
-        if (!isNaN(profissional.sexo_id) || profissional.sexo_id == '' || profissional.sexo_id == null || profissional.sexo_id == undefined || profissional.sexo_id.length < 1) {
-            if (profissional.sexo_id != M || profissional.sexo_id != F) {
-                invalidInputs.push('Id de usuario');
-                if (profissional.nome == '' || profissional.nome == undefined || profissional.nome == null || profissional.nome.length > 100)
-                    invalidInputs.push('Nome');
-                if (profissional.biografia == undefined)
-                    invalidInputs.push('biografia');
-                if (profissional.foto == '' || profissional.foto == undefined || profissional.foto == null || profissional.foto.length > 255)
-                    invalidInputs.push('foto');
-                if (profissional.data_nascimento == undefined || profissional.data_nascimento != 10)
-                    invalidInputs.push('Data de Nascimento');
-                if (profissional.data_falecimento == undefined)
-                    invalidInputs.push('Data de Falecimento');
+    if (isNaN(profissional.id) || profissional.id == '' || profissional.id == null || profissional.id == undefined || profissional.id <= 0)
+        invalidInputs.push('Id de usuario')
+    if (profissional.sexo_id != M || profissional.sexo_id != F)
+        invalidInputs.push('Id de sexo');
+    if (profissional.nome == '' || profissional.nome == undefined || profissional.nome == null || profissional.nome.length > 100)
+        invalidInputs.push('Nome');
+    if (profissional.biografia == undefined)
+        invalidInputs.push('biografia');
+    if (profissional.foto == '' || profissional.foto == undefined || profissional.foto == null || profissional.foto.length > 255)
+        invalidInputs.push('foto');
+    if (profissional.data_nascimento == undefined || profissional.data_nascimento != 10)
+        invalidInputs.push('Data de Nascimento');
+    if (profissional.data_falecimento == undefined)
+        invalidInputs.push('Data de Falecimento');
 
-                //Retornando em caso de campos invalidos
-                if (invalidInputs.length) {
-                    MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
-                    return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400
-                }
-                else
-                    return false;
+    //Retornando em caso de campos invalidos
+    if (invalidInputs.length) {
+        MESSAGES.ERROR_REQUIRED_FIELDS.message += `Campos incorretos: ${invalidInputs}`;
+        return MESSAGES.ERROR_REQUIRED_FIELDS;                              //400
+    }
+    else
+        return false;
 
-            }
+}
 
-            module.exports = {
-                listarProfissionais,
-                buscarProfissionalId,
-                inserirProfissional,
-                atualizarProfissional,
-                excluirProfissional
-            }
+    module.exports = {
+        listarProfissionais,
+        buscarProfissionalId,
+        inserirProfissional,
+        atualizarProfissional,
+        excluirProfissional
+    }
